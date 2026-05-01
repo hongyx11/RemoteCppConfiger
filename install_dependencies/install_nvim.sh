@@ -43,4 +43,8 @@ make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$INSTALL_DIR"
 make install
 
 ln -sf "$INSTALL_DIR/bin/nvim" "$BIN/nvim"
+
+echo "==> Removing build dir ($BUILD_DIR, ~600 MB)"
+rm -rf "$BUILD_DIR"
+
 echo "    $("$BIN/nvim" --version | head -1) installed."
