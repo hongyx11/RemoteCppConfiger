@@ -1,4 +1,3 @@
-vim.env.PATH = vim.fn.stdpath("config") .. "/install_dependencies/bin:" .. vim.env.PATH
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
 vim.g.mapleader = " "
 -- vim.opt.colorcolumn = "120"
