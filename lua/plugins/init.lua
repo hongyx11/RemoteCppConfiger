@@ -102,7 +102,7 @@ return {
 
       -- Auto-install parsers (only missing ones)
       local parsers = { "vim", "lua", "vimdoc", "html", "css", "c", "cpp", "python" }
-      local installed = require("nvim-treesitter.info").installed_parsers()
+      local installed = require("nvim-treesitter").get_installed()
       local to_install = vim.tbl_filter(function(p)
         return not vim.tbl_contains(installed, p)
       end, parsers)
