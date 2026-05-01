@@ -39,6 +39,7 @@ run "Python tools"     install_python_tools.sh
 run "uv (Python pkg mgr)" install_uv.sh
 run "Spack"            install_spack.sh
 run "TinyTeX (LaTeX)"  install_tinytex.sh
+run "just (cmd runner)" install_just.sh
 run "Starship prompt"  install_starship.sh
 run "atuin (history)"  install_atuin.sh
 run "Fonts (Maple Mono NF)" install_fonts.sh
