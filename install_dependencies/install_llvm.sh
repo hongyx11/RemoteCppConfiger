@@ -1,6 +1,7 @@
 #!/bin/bash
-# Install prebuilt LLVM (clang, clang++, clangd, clang-format, clang-tidy, libomp, lld)
-# into $PREFIX (default $HOME/local).
+# Install a *minimal* slice of prebuilt LLVM into $PREFIX (default $HOME/local):
+# only clangd + clang-format + the clang resource dir (~143 MB on disk vs ~7 GB
+# for the full toolchain). We compile with gcc/g++, so the rest is dead weight.
 #
 # Auto-picks the LLVM release based on host glibc:
 #   glibc < 2.38   → LLVM 18.1.8 ubuntu-18.04 prebuilt (Ubuntu 22.04 et al.)
@@ -48,24 +49,27 @@ DEST="$LIB/llvm-${LLVM_VERSION}"
 echo "host glibc: $glibc_ver"
 echo "LLVM:       $LLVM_VERSION ($LLVM_ASSET)"
 
-if [ -x "$BIN/clangd" ] && [ -x "$BIN/clang" ] && [ -x "$BIN/clang-format" ]; then
+if [ -x "$BIN/clangd" ] && [ -x "$BIN/clang-format" ]; then
   echo "LLVM tools already present at $BIN, skipping."
   exit 0
 fi
 
-# ── download + extract ────────────────────────────────
+# ── download + selective extract ──────────────────────
 echo "==> Downloading (~1 GB)"
 cd "$SRC"
 curl -fL --retry 3 --retry-delay 2 -o "$LLVM_ASSET" "$URL"
 
-echo "==> Extracting to $DEST"
+echo "==> Extracting clangd + clang-format + resource dir to $DEST"
 rm -rf "$DEST"
 mkdir -p "$DEST"
-tar xf "$LLVM_ASSET" -C "$DEST" --strip-components=1
+tar xf "$LLVM_ASSET" -C "$DEST" --strip-components=1 --wildcards \
+    '*/bin/clangd' \
+    '*/bin/clang-format' \
+    '*/lib/clang/*'
 rm -f "$LLVM_ASSET"
 
 # ── symlink binaries ──────────────────────────────────
-for t in clang clang++ clangd clang-format clang-tidy lld llvm-ar llvm-nm llvm-objdump; do
+for t in clangd clang-format; do
   if [ -x "$DEST/bin/$t" ]; then
     ln -sf "$DEST/bin/$t" "$BIN/$t"
   fi
