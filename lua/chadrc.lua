@@ -5,8 +5,17 @@
 ---@type ChadrcConfig
 local M = {}
 
+-- Theme is persisted in lua/theme_state.lua (gitignored), so theme switching
+-- doesn't dirty the repo. autocmds.lua redirects NvChad's writer there.
+local function load_theme()
+	package.loaded.theme_state = nil
+	local ok, t = pcall(require, "theme_state")
+	if ok and type(t) == "string" then return t end
+	return "ayu_dark"
+end
+
 M.base46 = {
-	theme = "ayu_dark",
+	theme = load_theme(),
 
 	hl_override = {
 		Comment = { italic = true },

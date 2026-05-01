@@ -20,3 +20,6 @@ install_dependencies/nvim-install/
 # Neovim generated
 plugin/packer_compiled.lua
 .netrwhist
+
+# Theme persistence (kept out of repo so theme switches don't dirty git)
+lua/theme_state.lua

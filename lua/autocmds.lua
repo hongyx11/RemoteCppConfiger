@@ -1,5 +1,30 @@
 require "nvchad.autocmds"
 
+-- Redirect NvChad's theme writer from lua/chadrc.lua to lua/theme_state.lua
+-- so theme switches don't show up as repo modifications.
+do
+	local ok, utils = pcall(require, "nvchad.utils")
+	if ok and utils.replace_word then
+		local original = utils.replace_word
+		local theme_state = vim.fn.stdpath("config") .. "/lua/theme_state.lua"
+		local chadrc = vim.fn.stdpath("config") .. "/lua/chadrc.lua"
+		utils.replace_word = function(old, new, filepath)
+			if (filepath == nil or filepath == chadrc) and type(new) == "string" then
+				local theme = new:match('^"(.+)"$')
+				if theme then
+					local f = io.open(theme_state, "w")
+					if f then
+						f:write('return "' .. theme .. '"\n')
+						f:close()
+					end
+					return
+				end
+			end
+			return original(old, new, filepath)
+		end
+	end
+end
+
 -- Auto-open NvimTree on startup (DISABLED)
 -- vim.api.nvim_create_autocmd("VimEnter", {
 --   callback = function()
