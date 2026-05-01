@@ -1,0 +1,43 @@
+# Editor
+brew "neovim"
+
+# Search / nav / view
+brew "ripgrep"
+brew "fd"
+brew "bat"
+brew "eza"
+brew "fzf"
+brew "zoxide"
+brew "yazi"
+
+# Multiplexers / git UI
+brew "tmux"
+brew "zellij"
+brew "lazygit"
+
+# C/C++ toolchain (provides clangd, clang-format, clang-tidy)
+brew "llvm"
+
+# LSPs / linters / formatters
+brew "lua-language-server"
+brew "pyright"
+brew "stylua"
+brew "ast-grep"
+brew "tree-sitter"
+
+# Languages / pkg mgmt
+brew "node"
+brew "uv"
+brew "rustup"
+
+# Shell / history / prompt / runner
+brew "starship"
+brew "atuin"
+brew "just"
+brew "gh"
+
+# LaTeX (small footprint vs full mactex)
+cask "basictex"
+
+# Fonts
+cask "font-maple-mono-nf"
