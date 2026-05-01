@@ -31,9 +31,26 @@ LEGACY_PATTERNS=(
 wire() {
   local rc="$1" shell="$2"
   echo "==> $rc"
+
+  # Render first. If render fails (missing template, bad PLATFORM, etc.), the
+  # rc file is left untouched.
+  local rendered
+  rendered=$(bash "$DIR/render.sh" "$PLATFORM" "$shell") || return 1
+
   [ -f "$rc" ] || : > "$rc"
 
-  # Drop any existing managed block. -i.bak form is BSD/GNU portable.
+  # Detect a malformed managed block: an opening marker without a closing one.
+  # In that state, the sed range below would delete from BEGIN to EOF and
+  # silently drop user content. Refuse to proceed.
+  if grep -q "^${BEGIN_MARK}$" "$rc" && ! grep -q "^${END_MARK}$" "$rc"; then
+    echo "  WARNING: $rc has an opening managed-block marker (${BEGIN_MARK})" >&2
+    echo "  but no matching closing marker. Refusing to proceed to avoid data" >&2
+    echo "  loss. Inspect the file, remove or close the orphan, then re-run." >&2
+    return 1
+  fi
+
+  # Drop any existing managed block. -i.bak form is BSD/GNU portable; we remove
+  # the .bak immediately on success.
   sed -i.bak "/^${BEGIN_MARK}$/,/^${END_MARK}$/d" "$rc" && rm -f "$rc.bak"
 
   # Drop legacy bare lines from older versions of the installer.
@@ -44,9 +61,9 @@ wire() {
     fi
   done
 
-  # Append the freshly rendered block.
+  # Append the freshly rendered block (already produced before any mutation).
   [ -s "$rc" ] && printf '\n' >> "$rc"
-  bash "$DIR/render.sh" "$PLATFORM" "$shell" >> "$rc"
+  printf '%s\n' "$rendered" >> "$rc"
 
   echo "  wrote managed block"
 }
