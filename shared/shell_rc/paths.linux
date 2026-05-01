@@ -1,0 +1,2 @@
+export PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
+export SPACK_ROOT="${SPACK_ROOT:-$HOME/spack}"
