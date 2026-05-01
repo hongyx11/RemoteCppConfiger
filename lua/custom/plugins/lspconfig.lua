@@ -1,0 +1,2 @@
+-- This file is no longer needed as clangd setup is handled in configs/lspconfig.lua
+-- Keeping this file for future custom LSP configurations if needed
