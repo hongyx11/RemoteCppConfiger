@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" alt="RemoteCppConfiger" width="420">
+</p>
+
 # RemoteCppConfiger
 
 Out-of-the-box C++ development environment for a raw Linux box. One install script lays down a Neovim-based editor, an LLVM toolchain, gcc-12 (apt or Spack), Rust, Node, and a curated set of CLI tools — all under `$HOME/local`.
