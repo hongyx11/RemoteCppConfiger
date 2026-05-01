@@ -1,6 +1,52 @@
 # Install
 
-RemoteCppConfiger targets a freshly provisioned Linux box. Two paths depending on whether you have sudo. Stages 0, 2, 3 are identical; only Stage 1 (the C++ compiler) differs.
+RemoteCppConfiger supports Ubuntu 22.04 / 24.04 (with or without sudo) and macOS (Apple Silicon, Homebrew). The macOS install is single-step via `brew bundle`; the Linux install is staged.
+
+## macOS
+
+### Prerequisites
+
+- [Homebrew](https://brew.sh) installed and on PATH.
+- Xcode Command Line Tools (`xcode-select --install`) — provides `git`.
+
+### One-liner
+
+```bash
+git clone <this repo> ~/code/RemoteCppConfiger
+ln -sfn ~/code/RemoteCppConfiger/nvimconfig ~/.config/nvim
+cd ~/code/RemoteCppConfiger/macconfig && ./install_all.sh
+```
+
+### What gets installed
+
+- All editor and CLI tools listed in `macconfig/Brewfile` (nvim, ripgrep, fd, bat, eza, zellij, lazygit, llvm, lua-language-server, pyright, ast-grep, stylua, tree-sitter, node, uv, rustup, starship, atuin, just, gh, fzf, zoxide, yazi, tmux, basictex, font-maple-mono-nf).
+- Rust via `rustup-init`.
+- Spack at `$HOME/spack` (mirrors the Linux layout). To use a different location, set `SPACK_ROOT` before running `install_all.sh`.
+- Oh My Tmux into `~/.tmux`, with our customizations seeded into `~/.tmux.conf.local` (only if absent).
+- A managed block in `~/.zshrc` and `~/.bashrc` that sets PATH for brew + LLVM + cargo, initializes starship/atuin/zoxide, defines a lazy `spack()` stub, and (zsh-only) caches `compinit`.
+
+### Where things live
+
+- Brew packages: `/opt/homebrew/...` (Apple Silicon) or `/usr/local/...` (Intel).
+- Spack: `$HOME/spack` (override with `SPACK_ROOT=...`).
+- Cargo / rustup: `$HOME/.cargo`, `$HOME/.rustup`.
+- nvim config: `~/.config/nvim` → symlink to `<repo>/nvimconfig`.
+
+### OMZ compinit speedup
+
+If you use Oh My Zsh, the cached-compinit speedup in our managed block runs *after* OMZ's slow path, so it has no effect by default. To activate it, paste this snippet into `~/.zshrc` immediately *before* `source $ZSH/oh-my-zsh.sh`:
+
+```zsh
+ZSH_DISABLE_COMPFIX=true
+autoload -Uz compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then compinit; else compinit -C; fi
+```
+
+`setup_shell_rc.sh` detects OMZ and prints this snippet at install time as a reminder.
+
+## Ubuntu (Linux)
+
+Two paths depending on whether you have sudo. Stages 0, 2, 3 are identical; only Stage 1 (the C++ compiler) differs.
 
 ## Stage 0 — terminal stack
 
