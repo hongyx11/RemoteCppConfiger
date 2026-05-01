@@ -88,6 +88,7 @@ return {
 
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
     config = function()
       -- Ensure C compiler is findable (GUI launches may lack PATH)
       if vim.fn.executable("cc") == 0 and vim.fn.executable("gcc") == 0 then
