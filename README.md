@@ -15,6 +15,7 @@ Designed to work on hosts with **or without** sudo. The only thing that branches
 - **Package manager**: Spack, with gcc-12 registered as the external compiler.
 - **LSPs**: clangd, pyright, lua-language-server, html, css.
 - **CLI**: ripgrep, fd, bat, eza, zellij, ast-grep, stylua, tree-sitter, lazygit, yazi.
+- **Terminal multiplexer**: Oh My Tmux config (Nord theme, mouse on, TPM with `tmux-sensible` and `tmux-pomodoro-plus`).
 - **Languages**: Rust (rustup), Node 22, Python 3 (system).
 
 ## Quick start

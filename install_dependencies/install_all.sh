@@ -36,6 +36,11 @@ run "Rust toolchain"   install_rust.sh
 run "CLI tools"        install_clis.sh
 run "LSP servers"      install_lsp_servers.sh
 run "Python tools"     install_python_tools.sh
+run "Starship prompt"  install_starship.sh
+run "atuin (history)"  install_atuin.sh
+run "Fonts (Maple Mono NF)" install_fonts.sh
+run "Tmux (Oh My Tmux)" install_tmux.sh
+run "Shell rc"         setup_shell_rc.sh
 
 echo
 echo "============================================"

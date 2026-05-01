@@ -70,9 +70,12 @@ install_lua_ls() {
     echo "  lua-language-server already installed, skipping."; return
   fi
   echo "==> lua-language-server (prebuilt)"
-  local tag
-  tag=$(curl -fsSL "https://api.github.com/repos/LuaLS/lua-language-server/releases/latest" \
-        | grep -m1 '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+  local tag json
+  json=$(curl -fsSL "https://api.github.com/repos/LuaLS/lua-language-server/releases/latest")
+  tag=""
+  if [[ "$json" =~ \"tag_name\":[[:space:]]*\"([^\"]+)\" ]]; then
+    tag="${BASH_REMATCH[1]}"
+  fi
   local stripped="${tag#v}"
   local url="https://github.com/LuaLS/lua-language-server/releases/download/$tag/lua-language-server-${stripped}-linux-x64.tar.gz"
   local dest="$LIB/lua-language-server"

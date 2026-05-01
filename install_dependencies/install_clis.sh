@@ -22,9 +22,11 @@ fi
 dl() { curl -fL --retry 3 --retry-delay 2 -o "$2" "$1"; }
 
 gh_latest() {
-  curl -fsSL "https://api.github.com/repos/$1/releases/latest" \
-    | grep -m1 '"tag_name"' \
-    | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/'
+  local json
+  json=$(curl -fsSL "https://api.github.com/repos/$1/releases/latest")
+  if [[ "$json" =~ \"tag_name\":[[:space:]]*\"([^\"]+)\" ]]; then
+    printf '%s\n' "${BASH_REMATCH[1]}"
+  fi
 }
 
 skip_if_present() {
