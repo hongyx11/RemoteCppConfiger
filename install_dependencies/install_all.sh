@@ -36,6 +36,8 @@ run "Rust toolchain"   install_rust.sh
 run "CLI tools"        install_clis.sh
 run "LSP servers"      install_lsp_servers.sh
 run "Python tools"     install_python_tools.sh
+run "uv (Python pkg mgr)" install_uv.sh
+run "Spack"            install_spack.sh
 run "Starship prompt"  install_starship.sh
 run "atuin (history)"  install_atuin.sh
 run "Fonts (Maple Mono NF)" install_fonts.sh
