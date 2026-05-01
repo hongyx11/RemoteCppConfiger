@@ -95,3 +95,21 @@ Tools installed here intentionally **shadow** any system versions of the same na
 - **Don't bundle our own glibc.** Manually swapping system glibc bricks the host. If you need newer glibc, upgrade the OS or use a container.
 - **Don't manage Python or virtualenvs.** The user's choice; pyright works against any interpreter via `pyright` config.
 - **Don't ship a system-wide MPI.** Use Spack for MPI builds tied to gcc-12.
+
+## Platform layout
+
+```
+RemoteCppConfiger/
+├── nvimconfig/                # → ~/.config/nvim (symlink)
+├── ubuntu_install_scripts/    # Linux installer (16 byte-identical from pre-restructure + 2 touched)
+├── macconfig/                 # Mac installer (Brewfile + tmux/rust/spack/fonts/setup_shell_rc)
+└── shared/
+    ├── tmux/tmux.conf.local         # one copy, both platforms reference it
+    └── shell_rc/
+        ├── template.{zsh,bash}      # single managed-block template per shell, w/ {{PLATFORM_PATH_BLOCK}}
+        ├── paths.{linux,mac}        # per-platform PATH lines
+        ├── render.sh                # splice paths into template
+        └── setup.sh                 # idempotent rc-file installer
+```
+
+The Mac installer deliberately skips the LLVM-tarball-with-libtinfo logic, the glibc-aware tree-sitter pin, and the `$HOME/local` no-sudo prefix. Mac uses Homebrew's `/opt/homebrew` prefix for binaries; Spack still installs at `$HOME/spack` (mirrors Linux). The shell-rc template is shared across platforms and substitutes only the PATH block at render time, so changes to the rest of the managed block (initializers, aliases, lazy spack, cached compinit) land on both platforms in one edit.
