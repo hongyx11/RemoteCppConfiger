@@ -9,8 +9,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TMUX_DIR="$HOME/.tmux"
-LOCAL_SRC="$SCRIPT_DIR/configs/tmux.conf.local"
+LOCAL_SRC="$REPO_ROOT/shared/tmux/tmux.conf.local"
 LOCAL_DST="$HOME/.tmux.conf.local"
 TPM_DIR="$TMUX_DIR/plugins/tpm"
 
