@@ -20,25 +20,38 @@ Designed to work on hosts with **or without** sudo. The only thing that branches
 
 ## Quick start
 
+Clone anywhere and symlink the editor config into `~/.config/nvim`:
+
 ```bash
-git clone <this repo> ~/.config/nvim
-cd ~/.config/nvim/install_dependencies
+git clone <this repo> ~/code/RemoteCppConfiger
+ln -sfn ~/code/RemoteCppConfiger/nvimconfig ~/.config/nvim
+```
+
+(If `~/.config/nvim` already exists, back it up first: `mv ~/.config/nvim ~/.config/nvim.bak.$(date +%s)`.)
+
+### Linux (Ubuntu 22 / 24)
+
+```bash
+cd ~/code/RemoteCppConfiger/ubuntu_install_scripts
 ./install_all.sh
 ```
 
-Add to `~/.zshrc` if not already present:
+For the no-sudo path, see [`docs/install.md`](docs/install.md).
+
+### Mac (Apple Silicon, Homebrew)
 
 ```bash
-export PATH="$HOME/local/bin:$PATH"
+cd ~/code/RemoteCppConfiger/macconfig
+./install_all.sh
 ```
+
+Prerequisites: [Homebrew](https://brew.sh), Xcode Command Line Tools (for `git`).
 
 Then launch:
 
 ```bash
 nvim
 ```
-
-For the no-sudo path, see [`docs/install.md`](docs/install.md).
 
 ## Documentation
 
@@ -50,18 +63,17 @@ For the no-sudo path, see [`docs/install.md`](docs/install.md).
 ## Layout
 
 ```
-~/.config/nvim/                # editor config (this repo)
-  init.lua                     # entry point
-  lua/                         # plugins, configs, snippets
-  install_dependencies/        # install scripts
-  docs/                        # documentation
-
-$HOME/local/                   # all installed binaries and libs
-  bin/                         # first on PATH
-  lib/                         # rustup, cargo, node, llvm-18.1.8, lua-ls, ...
-
-$HOME/spack/                   # Spack checkout (compiler + libraries)
+RemoteCppConfiger/                 # cloned anywhere
+├── nvimconfig/                    # → ~/.config/nvim (via symlink)
+├── ubuntu_install_scripts/        # Linux installer (Ubuntu 22 / 24)
+├── macconfig/                     # Mac installer (Brewfile + scripts)
+├── shared/
+│   ├── tmux/                      # tmux.conf.local (both platforms)
+│   └── shell_rc/                  # one zsh+bash template, per-platform paths
+└── docs/
 ```
+
+Linux installs into `$HOME/local/` and `$HOME/spack/`. Mac uses Homebrew's prefix (`/opt/homebrew`) plus `$HOME/spack/`.
 
 ## Credits
 
