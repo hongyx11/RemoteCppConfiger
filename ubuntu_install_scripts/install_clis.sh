@@ -2,9 +2,8 @@
 # Install CLI tools as prebuilt binaries into $PREFIX/bin (default $HOME/local/bin).
 # All from official GitHub releases — no compilation.
 #
-# tree-sitter is pinned to v0.22.6: latest releases require glibc 2.39 (Ubuntu 24.04),
-# v0.22.6 is the last that runs on Ubuntu 22.04 (glibc 2.35). Remove the pin once
-# the host glibc moves to 2.39+.
+# tree-sitter and yazi are glibc-aware: latest GNU prebuilts can require
+# glibc 2.39 (Ubuntu 24.04), while Ubuntu 22.04 has glibc 2.35.
 
 set -euo pipefail
 
@@ -27,6 +26,15 @@ gh_latest() {
   if [[ "$json" =~ \"tag_name\":[[:space:]]*\"([^\"]+)\" ]]; then
     printf '%s\n' "${BASH_REMATCH[1]}"
   fi
+}
+
+host_glibc() {
+  ldd --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+$' || echo "0.0"
+}
+
+glibc_ge() {
+  local want="$1" have="${2:-$(host_glibc)}"
+  [ "$(printf '%s\n%s\n' "$want" "$have" | sort -V | head -1)" = "$want" ]
 }
 
 skip_if_present() {
@@ -113,10 +121,10 @@ install_stylua() {
 # Latest releases need glibc 2.39 (Ubuntu 24.04). On glibc < 2.39 we pin to v0.22.6.
 install_treesitter() {
   skip_if_present tree-sitter && return
-  local glibc; glibc=$(ldd --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+$' || echo "0.0")
+  local glibc; glibc=$(host_glibc)
   local ver="${TREE_SITTER_VER:-}"
   if [ -z "$ver" ]; then
-    if [ "$(printf '2.39\n%s\n' "$glibc" | sort -V | head -1)" = "2.39" ]; then
+    if glibc_ge 2.39 "$glibc"; then
       ver="latest"  # glibc >= 2.39, latest release
     else
       ver="v0.22.6" # last release that runs on glibc 2.35
@@ -161,10 +169,23 @@ install_lazygit() {
 
 # ── yazi ──────────────────────────────────────────────
 install_yazi() {
-  skip_if_present yazi && return
+  if [ -x "$BIN/yazi" ] && [ -x "$BIN/ya" ]; then
+    if "$BIN/yazi" --version >/dev/null 2>&1; then
+      echo "  yazi already installed, skipping."
+      return
+    fi
+    echo "  existing yazi cannot run on this host; reinstalling."
+  fi
   echo "==> yazi"
   local tag; tag=$(gh_latest sxyazi/yazi)
-  local target="yazi-x86_64-unknown-linux-gnu"
+  local glibc; glibc=$(host_glibc)
+  local target
+  if glibc_ge 2.39 "$glibc"; then
+    target="yazi-x86_64-unknown-linux-gnu"
+  else
+    target="yazi-x86_64-unknown-linux-musl"
+  fi
+  echo "    target: $target (glibc $glibc)"
   dl "https://github.com/sxyazi/yazi/releases/download/$tag/$target.zip" yazi.zip
   unzip -o yazi.zip >/dev/null
   install -m755 "$target/yazi" "$BIN/yazi"

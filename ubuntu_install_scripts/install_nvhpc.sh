@@ -30,10 +30,11 @@ URL="https://developer.download.nvidia.com/hpc-sdk/$NVHPC_VERSION/$TARBALL"
 
 # Disk-space pre-check: need ~20 GB free for download + extract + install transient.
 NEED_KB=$((20 * 1024 * 1024))
-HAVE_KB=$(df -P "$HOME" | awk 'NR==2 {print $4}')
+mkdir -p "$PREFIX"
+HAVE_KB=$(df -P "$PREFIX" | awk 'NR==2 {print $4}')
 if [ "$HAVE_KB" -lt "$NEED_KB" ]; then
   HAVE_GB=$((HAVE_KB / 1024 / 1024))
-  echo "ERROR: need ~20 GB free in \$HOME's filesystem; only $HAVE_GB GB available." >&2
+  echo "ERROR: need ~20 GB free in $PREFIX's filesystem; only $HAVE_GB GB available." >&2
   exit 1
 fi
 

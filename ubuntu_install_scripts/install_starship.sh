@@ -16,13 +16,23 @@ else
   curl -sS https://starship.rs/install.sh | sh -s -- -b "$BIN" -y
 fi
 
-CONFIG="$HOME/.config/starship.toml"
-mkdir -p "$(dirname "$CONFIG")"
+CONFIG="$PREFIX/etc/starship.toml"
+HOME_CONFIG="$HOME/.config/starship.toml"
+mkdir -p "$(dirname "$CONFIG")" "$(dirname "$HOME_CONFIG")"
+
 if [ -f "$CONFIG" ]; then
   echo "  $CONFIG already exists, leaving it untouched."
 else
   echo "==> Writing gruvbox-rainbow preset to $CONFIG"
   "$BIN/starship" preset gruvbox-rainbow -o "$CONFIG"
+fi
+
+if [ -L "$HOME_CONFIG" ]; then
+  ln -sfn "$CONFIG" "$HOME_CONFIG"
+elif [ -e "$HOME_CONFIG" ]; then
+  echo "  $HOME_CONFIG exists; setup_user_paths.sh will back it up and link $CONFIG."
+else
+  ln -s "$CONFIG" "$HOME_CONFIG"
 fi
 
 echo "    $("$BIN/starship" --version | head -1)"

@@ -28,6 +28,8 @@ esac
 DIR="$(cd "$(dirname "$0")" && pwd)"
 TEMPLATE="$DIR/template.$SHELL_NAME"
 PATHS="$DIR/paths.$PLATFORM"
+PREFIX_VALUE="${PREFIX:-$HOME/local}"
+SPACK_ROOT_VALUE="${SPACK_ROOT:-$PREFIX_VALUE/spack}"
 
 [ -f "$TEMPLATE" ] || { echo "missing template: $TEMPLATE" >&2; exit 1; }
 [ -f "$PATHS" ]    || { echo "missing paths file: $PATHS" >&2; exit 1; }
@@ -36,7 +38,11 @@ placeholder_hit=0
 while IFS= read -r line || [ -n "$line" ]; do
   if [ "$line" = "{{PLATFORM_PATH_BLOCK}}" ]; then
     placeholder_hit=1
-    cat "$PATHS"
+    while IFS= read -r path_line || [ -n "$path_line" ]; do
+      path_line="${path_line//\{\{PREFIX\}\}/$PREFIX_VALUE}"
+      path_line="${path_line//\{\{SPACK_ROOT\}\}/$SPACK_ROOT_VALUE}"
+      printf '%s\n' "$path_line"
+    done < "$PATHS"
   else
     printf '%s\n' "$line"
   fi

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install Python formatters into a venv under $PREFIX/lib.
+# Install Python formatters into a venv under $PREFIX/lib using uv.
 # Binaries symlinked into $PREFIX/bin.
 
 set -euo pipefail
@@ -7,7 +7,8 @@ set -euo pipefail
 PREFIX="${PREFIX:-$HOME/local}"
 BIN="$PREFIX/bin"
 LIB="$PREFIX/lib"
-mkdir -p "$BIN" "$LIB"
+mkdir -p "$BIN" "$LIB" "$PREFIX/cache"
+export UV_CACHE_DIR="${UV_CACHE_DIR:-$PREFIX/cache/uv}"
 
 VENV="$LIB/python-tools"
 
@@ -21,12 +22,16 @@ if ! command -v python3 >/dev/null; then
   exit 1
 fi
 
-echo "==> Creating venv at $VENV"
-python3 -m venv "$VENV"
+if [ ! -x "$BIN/uv" ]; then
+  echo "ERROR: uv not found at $BIN/uv. Run install_uv.sh first." >&2
+  exit 1
+fi
 
-echo "==> Installing black, autopep8"
-"$VENV/bin/pip" install --upgrade pip >/dev/null
-"$VENV/bin/pip" install black autopep8 >/dev/null
+echo "==> Creating venv at $VENV"
+"$BIN/uv" venv --python python3 "$VENV" >/dev/null
+
+echo "==> Installing black, autopep8 with uv"
+"$BIN/uv" pip install --python "$VENV/bin/python" black autopep8 >/dev/null
 
 for tool in black autopep8; do
   ln -sf "$VENV/bin/$tool" "$BIN/$tool"

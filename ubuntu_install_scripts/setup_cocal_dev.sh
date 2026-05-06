@@ -3,7 +3,7 @@
 #   - apt: build-essential, git, curl, gcc-12, g++-12, gfortran-12
 #   - working nvidia-smi
 #   - SSH keys in ~/.ssh/: githubreadonly, spackenv, cocalkey
-#   - spack cloned at $SPACK_ROOT (default $HOME/spack)
+#   - spack cloned at $SPACK_ROOT (default $PREFIX/spack)
 #
 # Idempotent: re-running skips work that's already done.
 
@@ -11,7 +11,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PREFIX="${PREFIX:-$HOME/local}"
-SPACK_ROOT="${SPACK_ROOT:-$HOME/spack}"
+SPACK_ROOT="${SPACK_ROOT:-$PREFIX/spack}"
 NVHPC_VERSION="${NVHPC_VERSION:-25.7}"
 ENV_NAME="${ENV_NAME:-exouser-cocal-dev}"
 

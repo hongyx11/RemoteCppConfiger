@@ -3,14 +3,16 @@
 # Run as:  bash ~/RemoteCppConfiger/install_dependencies/setup_no_sudo.sh
 #
 # This is the Stage 1 alternative for hosts without sudo. It clones Spack into
-# $SPACK_ROOT (default $HOME/spack), builds gcc@12 from source (~30 min), and
+# $SPACK_ROOT (default $PREFIX/spack), builds gcc@12 from source (~30 min), and
 # registers it as a Spack compiler so subsequent `spack install <pkg>` uses it.
 #
-# Override the prefix with: SPACK_ROOT=/path/to/spack ./setup_no_sudo.sh
+# Override the prefix with: PREFIX=/path/to/prefix ./setup_no_sudo.sh
+# Or override only Spack with: SPACK_ROOT=/path/to/spack ./setup_no_sudo.sh
 
 set -euo pipefail
 
-SPACK_ROOT="${SPACK_ROOT:-$HOME/spack}"
+PREFIX="${PREFIX:-$HOME/local}"
+SPACK_ROOT="${SPACK_ROOT:-$PREFIX/spack}"
 
 if [ ! -d "$SPACK_ROOT" ]; then
   echo "==> Cloning Spack → $SPACK_ROOT"

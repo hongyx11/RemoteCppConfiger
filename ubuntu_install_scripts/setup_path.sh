@@ -6,6 +6,7 @@
 #   source ~/.config/nvim/install_dependencies/setup_path.sh
 
 _PREFIX="${PREFIX:-$HOME/local}"
+export SPACK_ROOT="${SPACK_ROOT:-$_PREFIX/spack}"
 case ":$PATH:" in
   *":$_PREFIX/bin:"*) ;;
   *) export PATH="$_PREFIX/bin:$PATH" ;;

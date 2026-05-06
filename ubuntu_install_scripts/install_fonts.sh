@@ -1,5 +1,6 @@
 #!/bin/bash
-# Install Maple Mono NF into $HOME/.local/share/fonts and refresh the cache.
+# Install Maple Mono NF into $PREFIX/share/fonts and symlink it into
+# $HOME/.local/share/fonts for fontconfig.
 # No sudo. The font is rendered by the local terminal emulator, so the host
 # this script runs on is the host that needs it.
 #
@@ -7,11 +8,16 @@
 
 set -euo pipefail
 
-FONT_DIR="$HOME/.local/share/fonts/MapleMono-NF"
+PREFIX="${PREFIX:-$HOME/local}"
+FONT_DIR="$PREFIX/share/fonts/MapleMono-NF"
+HOME_FONT_DIR="$HOME/.local/share/fonts/MapleMono-NF"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
-if fc-list 2>/dev/null | grep -qi "Maple Mono NF"; then
+FONT_LIST="$TMP/font-list.txt"
+fc-list > "$FONT_LIST" 2>/dev/null || : > "$FONT_LIST"
+
+if grep -qi "Maple Mono NF" "$FONT_LIST"; then
   echo "  Maple Mono NF already registered with fontconfig, skipping."
   exit 0
 fi
@@ -34,8 +40,19 @@ echo "==> Extracting → $FONT_DIR"
 mkdir -p "$FONT_DIR"
 unzip -o -q "$TMP/MapleMono-NF.zip" -d "$FONT_DIR"
 
+mkdir -p "$(dirname "$HOME_FONT_DIR")"
+if [ -L "$HOME_FONT_DIR" ]; then
+  ln -sfn "$FONT_DIR" "$HOME_FONT_DIR"
+elif [ -e "$HOME_FONT_DIR" ] && [ "$HOME_FONT_DIR" != "$FONT_DIR" ]; then
+  mv "$HOME_FONT_DIR" "$HOME_FONT_DIR.bak.$$"
+  ln -s "$FONT_DIR" "$HOME_FONT_DIR"
+else
+  ln -s "$FONT_DIR" "$HOME_FONT_DIR"
+fi
+
 echo "==> Rebuilding font cache"
 fc-cache -f "$HOME/.local/share/fonts"
 
-faces=$(fc-list | grep -ci "maple mono nf" || true)
+fc-list > "$FONT_LIST" 2>/dev/null || : > "$FONT_LIST"
+faces=$(grep -ci "maple mono nf" "$FONT_LIST" || true)
 echo "    $faces Maple Mono NF face(s) registered"

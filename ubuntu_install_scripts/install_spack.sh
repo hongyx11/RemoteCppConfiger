@@ -1,10 +1,11 @@
 #!/bin/bash
-# Clone Spack into $SPACK_ROOT (default $HOME/spack).
+# Clone Spack into $SPACK_ROOT (default $PREFIX/spack).
 # No sudo, no compiler build — see setup_no_sudo.sh for the gcc@12 bootstrap.
 
 set -euo pipefail
 
-SPACK_ROOT="${SPACK_ROOT:-$HOME/spack}"
+PREFIX="${PREFIX:-$HOME/local}"
+SPACK_ROOT="${SPACK_ROOT:-$PREFIX/spack}"
 
 if [ -d "$SPACK_ROOT/.git" ]; then
   echo "  spack already cloned at $SPACK_ROOT, skipping."

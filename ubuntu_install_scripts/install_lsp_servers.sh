@@ -9,9 +9,10 @@ PREFIX="${PREFIX:-$HOME/local}"
 BIN="$PREFIX/bin"
 LIB="$PREFIX/lib"
 SRC="$PREFIX/src"
-mkdir -p "$BIN" "$LIB" "$SRC"
+mkdir -p "$BIN" "$LIB" "$SRC" "$PREFIX/cache"
 
 export PATH="$BIN:$PATH"
+export npm_config_cache="${npm_config_cache:-$PREFIX/cache/npm}"
 
 # ── pyright ───────────────────────────────────────────
 install_pyright() {

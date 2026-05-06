@@ -4,7 +4,7 @@
 
 # RemoteCppConfiger
 
-Out-of-the-box C++ development environment for a raw Linux box. One install script lays down a Neovim-based editor, an LLVM toolchain, gcc-12 (apt or Spack), Rust, Node, and a curated set of CLI tools — all under `$HOME/local`.
+Out-of-the-box C++ development environment for a raw Linux box. One install script lays down a Neovim-based editor, an LLVM toolchain, gcc-12 (apt or Spack), Rust, Node, and a curated set of CLI tools — all under one install prefix (`$HOME/local` by default).
 
 Designed to work on hosts with **or without** sudo. The only thing that branches is how gcc-12 is acquired; everything else installs identically.
 
@@ -35,6 +35,20 @@ ln -sfn ~/code/RemoteCppConfiger/nvimconfig ~/.config/nvim
 cd ~/code/RemoteCppConfiger/ubuntu_install_scripts
 ./install_all.sh
 ```
+
+One-liner with a custom install prefix:
+
+```bash
+cd ~/code/RemoteCppConfiger && PREFIX=/media/volume/workspace bash ubuntu_install_scripts/install_all.sh
+```
+
+The NVIDIA HPC SDK is included by default. To skip it:
+
+```bash
+cd ~/code/RemoteCppConfiger && PREFIX=/media/volume/workspace INSTALL_NVHPC=0 bash ubuntu_install_scripts/install_all.sh
+```
+
+The installer keeps tool payloads under the prefix, including Spack at `$PREFIX/spack`, TinyTeX at `$PREFIX/.TinyTeX`, Rust and Python tool environments under `$PREFIX/lib`, Node under `$PREFIX/lib`, and command shims in `$PREFIX/bin`. User config/state that must remain at conventional home paths is symlinked back to prefix-owned locations; existing files are moved into `$PREFIX/backups/user-config-<timestamp>/` first.
 
 For the no-sudo path, see [`docs/install.md`](docs/install.md).
 
@@ -73,7 +87,7 @@ RemoteCppConfiger/                 # cloned anywhere
 └── docs/
 ```
 
-Linux installs into `$HOME/local/` and `$HOME/spack/`. Mac uses Homebrew's prefix (`/opt/homebrew`) plus `$HOME/spack/`.
+Linux installs into one prefix: `$HOME/local/` by default, with Spack at `$HOME/local/spack/`. Mac uses Homebrew's prefix (`/opt/homebrew`) plus `$HOME/spack/`.
 
 ## Credits
 

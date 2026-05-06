@@ -5,6 +5,7 @@
 #   source ~/.config/nvim/install_dependencies/activate.sh && nvim
 
 _PREFIX="${PREFIX:-$HOME/local}"
+export SPACK_ROOT="${SPACK_ROOT:-$_PREFIX/spack}"
 
 # ── PATH ────────────────────────────────────────────────
 case ":$PATH:" in

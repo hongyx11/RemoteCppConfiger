@@ -1,7 +1,7 @@
 #!/bin/bash
 # Install TinyTeX (lightweight LaTeX) and point its symlinks at $PREFIX/bin.
-# TinyTeX itself always installs into $HOME/.TinyTeX (its installer doesn't
-# support relocation); we only manage the symlink directory.
+# TinyTeX itself installs into $PREFIX/.TinyTeX by default; we also point its
+# command symlinks at $PREFIX/bin.
 # No sudo, no interactive input.
 
 set -euo pipefail
@@ -11,7 +11,7 @@ BIN="$PREFIX/bin"
 mkdir -p "$BIN"
 export PATH="$BIN:$PATH"
 
-TINYTEX_DIR="$HOME/.TinyTeX"
+TINYTEX_DIR="${TINYTEX_DIR:-$PREFIX/.TinyTeX}"
 
 if [ -x "$BIN/pdflatex" ] && [ -x "$BIN/tlmgr" ]; then
   echo "  TinyTeX already linked into $BIN, skipping."
@@ -21,7 +21,8 @@ fi
 
 if [ ! -d "$TINYTEX_DIR" ]; then
   echo "==> Installing TinyTeX → $TINYTEX_DIR"
-  curl -sSL "https://yihui.org/tinytex/install-bin-unix.sh" | sh
+  curl -sSL "https://yihui.org/tinytex/install-bin-unix.sh" \
+    | env TINYTEX_DIR="$(dirname "$TINYTEX_DIR")" sh -s -- --no-path
 fi
 
 TT_BIN="$(find "$TINYTEX_DIR/bin" -mindepth 1 -maxdepth 1 -type d | head -1)"

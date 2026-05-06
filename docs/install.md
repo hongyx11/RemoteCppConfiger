@@ -58,10 +58,10 @@ Required regardless of sudo. These are not strictly needed by Neovim but make th
 | `tmux` | terminal multiplexer |
 | `starship` | prompt |
 
-Install via the distro package manager (sudo) or as static binaries dropped into `$HOME/local/bin` (no sudo). Starship ships a one-shot installer that respects `--bin-dir`:
+Install via the distro package manager (sudo) or as static binaries dropped into `$PREFIX/bin` (no sudo). Starship ships a one-shot installer that respects `--bin-dir`:
 
 ```bash
-curl -sS https://starship.rs/install.sh | sh -s -- -b "$HOME/local/bin" -y
+curl -sS https://starship.rs/install.sh | sh -s -- -b "${PREFIX:-$HOME/local}/bin" -y
 ```
 
 ## Stage 1 — C++ compiler (gcc/g++ 12)
@@ -90,8 +90,9 @@ Either way, you end with a working `gcc-12` / `g++-12` toolchain on disk.
 Spack is the package manager for libraries (MPI, BLAS, HDF5, …) on both paths. On no-sudo systems it is also where the compiler comes from.
 
 ```bash
-git clone --depth=1 https://github.com/spack/spack.git "$HOME/spack"
-. "$HOME/spack/share/spack/setup-env.sh"   # add to ~/.zshrc to persist
+PREFIX="${PREFIX:-$HOME/local}"
+git clone --depth=1 https://github.com/spack/spack.git "$PREFIX/spack"
+. "$PREFIX/spack/share/spack/setup-env.sh"   # add to ~/.zshrc to persist
 ```
 
 Register gcc-12 as the external compiler so Spack uses it for everything else it builds:
@@ -116,14 +117,22 @@ cd ~/.config/nvim/install_dependencies
 ./install_all.sh
 ```
 
-All binaries land in `$HOME/local/bin` (already on `PATH` if `.zshrc` has `export PATH="$HOME/local/bin:$PATH"`).
+All package payloads land under one prefix: `$PREFIX` (`$HOME/local` by default). Spack lands in `$PREFIX/spack`, TinyTeX in `$PREFIX/.TinyTeX`, Rust/Python tool environments and Node land under `$PREFIX/lib`, and command shims/symlinks land in `$PREFIX/bin`.
+
+User config/state that needs conventional home paths is symlinked back into the prefix. Existing paths are moved into `$PREFIX/backups/user-config-<timestamp>/` before replacement.
+
+`install_all.sh` installs the NVIDIA HPC SDK by default. To skip the large NVHPC download/install:
+
+```bash
+INSTALL_NVHPC=0 ./install_all.sh
+```
 
 | Tool | Source | Notes |
 |---|---|---|
 | `nvim` | source build | latest stable tag |
 | `ninja` | github prebuilt | `ninja-linux.zip` |
 | `clang`, `clang++`, `clangd`, `clang-format`, `clang-tidy` | github prebuilt | LLVM 18 on Ubuntu 22.04, LLVM 19 on Ubuntu 24.04 (auto-detected; see [design.md](design.md)) |
-| `cargo`, `rustc`, `rustup` | rustup | `RUSTUP_HOME` / `CARGO_HOME` under `$HOME/local/lib`, wrapped in `$HOME/local/bin` |
+| `cargo`, `rustc`, `rustup` | rustup | `RUSTUP_HOME` / `CARGO_HOME` under `$PREFIX/lib`, wrapped in `$PREFIX/bin` |
 | `node`, `npm` | nodejs.org tarball | v22 LTS |
 | `pyright`, `pyright-langserver` | npm | Python LSP |
 | `lua-language-server` | github prebuilt | Lua LSP |
@@ -151,7 +160,7 @@ Everything is contained:
 
 ```bash
 rm -rf ~/.config/nvim ~/.local/share/nvim ~/.local/state/nvim
-rm -rf $HOME/local $HOME/spack
+rm -rf "${PREFIX:-$HOME/local}"
 ```
 
 No system files were modified (sudo path aside, where `apt` installs are subject to normal `apt remove`).
