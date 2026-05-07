@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install Oh My Tmux (gpakosz/.tmux), symlink ~/.tmux.conf, and seed
+# Install Oh My Tmux (gpakosz/.tmux), copy ~/.tmux.conf, and seed
 # ~/.tmux.conf.local from shared/tmux/. Mirrors the Linux tmux installer.
 # Tmux itself is provided by brew (declared in Brewfile).
 
@@ -27,16 +27,14 @@ else
   git clone --depth 1 https://github.com/gpakosz/.tmux.git "$TMUX_DIR"
 fi
 
-echo "==> Linking ~/.tmux.conf → $TMUX_DIR/.tmux.conf"
+echo "==> Copying .tmux.conf → $HOME/.tmux.conf"
 if [ -L "$HOME/.tmux.conf" ]; then
-  ln -snf "$TMUX_DIR/.tmux.conf" "$HOME/.tmux.conf"
+  rm "$HOME/.tmux.conf"
 elif [ -e "$HOME/.tmux.conf" ]; then
   echo "  ~/.tmux.conf is a regular file; backing up to ~/.tmux.conf.bak.$$"
   mv "$HOME/.tmux.conf" "$HOME/.tmux.conf.bak.$$"
-  ln -s "$TMUX_DIR/.tmux.conf" "$HOME/.tmux.conf"
-else
-  ln -s "$TMUX_DIR/.tmux.conf" "$HOME/.tmux.conf"
 fi
+cp "$TMUX_DIR/.tmux.conf" "$HOME/.tmux.conf"
 
 if [ -e "$LOCAL_DST" ]; then
   echo "  $LOCAL_DST already exists, leaving it untouched."

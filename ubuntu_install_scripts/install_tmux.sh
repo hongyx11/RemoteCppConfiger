@@ -1,8 +1,7 @@
 #!/bin/bash
-# Install Oh My Tmux (gpakosz/.tmux) under $PREFIX/share/tmux, symlink
-# ~/.tmux and ~/.tmux.conf to it, drop bundled customizations under
-# $PREFIX/etc/tmux.conf.local and symlink ~/.tmux.conf.local to it,
-# install TPM, and headlessly install the plugins listed in the .local file.
+# Install Oh My Tmux (gpakosz/.tmux) directly into ~/.tmux, copy .tmux.conf
+# into $HOME, seed ~/.tmux.conf.local from shared/tmux/, install TPM, and
+# headlessly install the plugins listed in the .local file.
 #
 # Assumes `tmux` itself is already on PATH (apt/spack on the host). This script
 # only manages the configuration and plugins.
@@ -11,17 +10,18 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PREFIX="${PREFIX:-$HOME/local}"
-TMUX_DIR="$PREFIX/share/tmux/oh-my-tmux"
-HOME_TMUX_DIR="$HOME/.tmux"
+TMUX_DIR="$HOME/.tmux"
 LOCAL_SRC="$REPO_ROOT/shared/tmux/tmux.conf.local"
-LOCAL_DST="$PREFIX/etc/tmux.conf.local"
-HOME_LOCAL_DST="$HOME/.tmux.conf.local"
+LOCAL_DST="$HOME/.tmux.conf.local"
 TPM_DIR="$TMUX_DIR/plugins/tpm"
-mkdir -p "$(dirname "$TMUX_DIR")" "$(dirname "$LOCAL_DST")"
 
 if ! command -v tmux >/dev/null 2>&1; then
   echo "  warning: 'tmux' not found on PATH. Install it via apt or spack, then re-run."
+fi
+
+if [ -L "$TMUX_DIR" ]; then
+  echo "  $TMUX_DIR is a symlink; removing it before clone."
+  rm "$TMUX_DIR"
 fi
 
 if [ -d "$TMUX_DIR/.git" ]; then
@@ -35,38 +35,23 @@ else
   git clone --depth 1 https://github.com/gpakosz/.tmux.git "$TMUX_DIR"
 fi
 
-if [ -L "$HOME_TMUX_DIR" ]; then
-  ln -sfn "$TMUX_DIR" "$HOME_TMUX_DIR"
-elif [ -e "$HOME_TMUX_DIR" ]; then
-  echo "  ~/.tmux exists; setup_user_paths.sh will back it up and link $TMUX_DIR."
-else
-  ln -s "$TMUX_DIR" "$HOME_TMUX_DIR"
-fi
-
-echo "==> Linking ~/.tmux.conf → $TMUX_DIR/.tmux.conf"
+echo "==> Copying .tmux.conf → $HOME/.tmux.conf"
 if [ -L "$HOME/.tmux.conf" ]; then
-  ln -snf "$TMUX_DIR/.tmux.conf" "$HOME/.tmux.conf"
+  rm "$HOME/.tmux.conf"
 elif [ -e "$HOME/.tmux.conf" ]; then
   echo "  ~/.tmux.conf is a regular file; backing up to ~/.tmux.conf.bak.$$"
   mv "$HOME/.tmux.conf" "$HOME/.tmux.conf.bak.$$"
-  ln -s "$TMUX_DIR/.tmux.conf" "$HOME/.tmux.conf"
-else
-  ln -s "$TMUX_DIR/.tmux.conf" "$HOME/.tmux.conf"
 fi
+cp "$TMUX_DIR/.tmux.conf" "$HOME/.tmux.conf"
 
+if [ -L "$LOCAL_DST" ]; then
+  rm "$LOCAL_DST"
+fi
 if [ -e "$LOCAL_DST" ]; then
   echo "  $LOCAL_DST already exists, leaving it untouched."
 else
   echo "==> Writing bundled customizations to $LOCAL_DST"
   cp "$LOCAL_SRC" "$LOCAL_DST"
-fi
-
-if [ -L "$HOME_LOCAL_DST" ]; then
-  ln -sfn "$LOCAL_DST" "$HOME_LOCAL_DST"
-elif [ -e "$HOME_LOCAL_DST" ]; then
-  echo "  ~/.tmux.conf.local exists; setup_user_paths.sh will back it up and link $LOCAL_DST."
-else
-  ln -s "$LOCAL_DST" "$HOME_LOCAL_DST"
 fi
 
 if [ -d "$TPM_DIR/.git" ]; then

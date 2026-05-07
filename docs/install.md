@@ -13,9 +13,10 @@ RemoteCppConfiger supports Ubuntu 22.04 / 24.04 (with or without sudo) and macOS
 
 ```bash
 git clone <this repo> ~/code/RemoteCppConfiger
-ln -sfn ~/code/RemoteCppConfiger/nvimconfig ~/.config/nvim
 cd ~/code/RemoteCppConfiger/macconfig && ./install_all.sh
 ```
+
+`install_all.sh` copies `nvimconfig/` into `~/.config/nvim`; an existing config at that path is moved aside to `~/.config/nvim.bak.<timestamp>` first.
 
 ### What gets installed
 
@@ -30,7 +31,7 @@ cd ~/code/RemoteCppConfiger/macconfig && ./install_all.sh
 - Brew packages: `/opt/homebrew/...` (Apple Silicon) or `/usr/local/...` (Intel).
 - Spack: `$HOME/spack` (override with `SPACK_ROOT=...`).
 - Cargo / rustup: `$HOME/.cargo`, `$HOME/.rustup`.
-- nvim config: `~/.config/nvim` → symlink to `<repo>/nvimconfig`.
+- nvim config: `~/.config/nvim` (copied from `<repo>/nvimconfig` by `install_all.sh`).
 
 ### OMZ compinit speedup
 
@@ -119,7 +120,7 @@ cd ~/.config/nvim/install_dependencies
 
 All package payloads land under one prefix: `$PREFIX` (`$HOME/local` by default). Spack lands in `$PREFIX/spack`, TinyTeX in `$PREFIX/.TinyTeX`, Rust/Python tool environments and Node land under `$PREFIX/lib`, and command shims/symlinks land in `$PREFIX/bin`.
 
-User config/state that needs conventional home paths is symlinked back into the prefix. Existing paths are moved into `$PREFIX/backups/user-config-<timestamp>/` before replacement.
+User-facing config (Neovim, tmux, starship, fonts) is installed directly into the conventional `$HOME` paths. Pre-existing files at those paths are moved aside with a `.bak.<timestamp>` suffix.
 
 `install_all.sh` installs the NVIDIA HPC SDK by default. To skip the large NVHPC download/install:
 

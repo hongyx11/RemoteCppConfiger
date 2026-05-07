@@ -37,14 +37,28 @@ run "Rust toolchain" install_rust.sh
 run "Python (uv)"    install_python.sh
 run "Spack"          install_spack.sh
 run "Tmux (Oh My Tmux)" install_tmux.sh
+
+echo
+echo "---- Neovim config ----"
+NVIM_CONFIG_SRC="$REPO_ROOT/nvimconfig"
+NVIM_CONFIG_DST="$HOME/.config/nvim"
+mkdir -p "$(dirname "$NVIM_CONFIG_DST")"
+if [ -L "$NVIM_CONFIG_DST" ]; then
+  echo "  $NVIM_CONFIG_DST is a symlink; removing it before copy."
+  rm "$NVIM_CONFIG_DST"
+elif [ -e "$NVIM_CONFIG_DST" ]; then
+  bak="$NVIM_CONFIG_DST.bak.$(date +%Y%m%d-%H%M%S)"
+  echo "  $NVIM_CONFIG_DST exists; moving to $bak"
+  mv "$NVIM_CONFIG_DST" "$bak"
+fi
+echo "==> Copying $NVIM_CONFIG_SRC → $NVIM_CONFIG_DST"
+cp -R "$NVIM_CONFIG_SRC" "$NVIM_CONFIG_DST"
+
 run "Shell rc"       setup_shell_rc.sh
 
 echo
 echo "============================================"
 echo " Done."
-echo
-echo " If you haven't already:"
-echo "   ln -sfn $REPO_ROOT/nvimconfig ~/.config/nvim"
 echo
 echo " Open a new shell (or 'exec zsh') for shell rc changes to take effect."
 echo "============================================"

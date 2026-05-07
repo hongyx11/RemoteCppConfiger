@@ -100,7 +100,7 @@ Tools installed here intentionally **shadow** any system versions of the same na
 
 ```
 RemoteCppConfiger/
-├── nvimconfig/                # → ~/.config/nvim (symlink)
+├── nvimconfig/                # copied to ~/.config/nvim by installer
 ├── ubuntu_install_scripts/    # Linux installer (16 byte-identical from pre-restructure + 2 touched)
 ├── macconfig/                 # Mac installer (Brewfile + tmux/rust/spack/fonts/setup_shell_rc)
 └── shared/

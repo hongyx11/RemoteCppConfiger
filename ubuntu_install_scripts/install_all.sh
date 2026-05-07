@@ -11,6 +11,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 export PREFIX="${PREFIX:-$HOME/local}"
 export SPACK_ROOT="${SPACK_ROOT:-$PREFIX/spack}"
 export INSTALL_NVHPC="${INSTALL_NVHPC:-1}"
@@ -57,7 +58,23 @@ run "just (cmd runner)" install_just.sh
 run "Starship prompt"  install_starship.sh
 run "Fonts (Maple Mono NF)" install_fonts.sh
 run "Tmux (Oh My Tmux)" install_tmux.sh
-run "User config/data links" setup_user_paths.sh
+
+echo
+echo "---- Neovim config ----"
+NVIM_CONFIG_SRC="$REPO_ROOT/nvimconfig"
+NVIM_CONFIG_DST="$HOME/.config/nvim"
+mkdir -p "$(dirname "$NVIM_CONFIG_DST")"
+if [ -L "$NVIM_CONFIG_DST" ]; then
+  echo "  $NVIM_CONFIG_DST is a symlink; removing it before copy."
+  rm "$NVIM_CONFIG_DST"
+elif [ -e "$NVIM_CONFIG_DST" ]; then
+  bak="$NVIM_CONFIG_DST.bak.$(date +%Y%m%d-%H%M%S)"
+  echo "  $NVIM_CONFIG_DST exists; moving to $bak"
+  mv "$NVIM_CONFIG_DST" "$bak"
+fi
+echo "==> Copying $NVIM_CONFIG_SRC → $NVIM_CONFIG_DST"
+cp -R "$NVIM_CONFIG_SRC" "$NVIM_CONFIG_DST"
+
 run "Shell rc"         setup_shell_rc.sh
 
 echo

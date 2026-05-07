@@ -20,14 +20,13 @@ Designed to work on hosts with **or without** sudo. The only thing that branches
 
 ## Quick start
 
-Clone anywhere and symlink the editor config into `~/.config/nvim`:
+Clone anywhere; the platform installer copies the editor config into `~/.config/nvim` for you:
 
 ```bash
 git clone <this repo> ~/code/RemoteCppConfiger
-ln -sfn ~/code/RemoteCppConfiger/nvimconfig ~/.config/nvim
 ```
 
-(If `~/.config/nvim` already exists, back it up first: `mv ~/.config/nvim ~/.config/nvim.bak.$(date +%s)`.)
+(If `~/.config/nvim` already exists, the installer moves it aside to `~/.config/nvim.bak.<timestamp>` before copying.)
 
 ### Linux (Ubuntu 22 / 24)
 
@@ -48,7 +47,7 @@ The NVIDIA HPC SDK is included by default. To skip it:
 cd ~/code/RemoteCppConfiger && PREFIX=/media/volume/workspace INSTALL_NVHPC=0 bash ubuntu_install_scripts/install_all.sh
 ```
 
-The installer keeps tool payloads under the prefix, including Spack at `$PREFIX/spack`, TinyTeX at `$PREFIX/.TinyTeX`, Rust and Python tool environments under `$PREFIX/lib`, Node under `$PREFIX/lib`, and command shims in `$PREFIX/bin`. User config/state that must remain at conventional home paths is symlinked back to prefix-owned locations; existing files are moved into `$PREFIX/backups/user-config-<timestamp>/` first.
+The installer keeps tool payloads under the prefix, including Spack at `$PREFIX/spack`, TinyTeX at `$PREFIX/.TinyTeX`, Rust and Python tool environments under `$PREFIX/lib`, Node under `$PREFIX/lib`, and command shims in `$PREFIX/bin`. User-facing config (Neovim, tmux, starship, fonts) is installed directly into the conventional `$HOME` paths; pre-existing files are moved aside with a `.bak.<timestamp>` suffix.
 
 For the no-sudo path, see [`docs/install.md`](docs/install.md).
 
@@ -78,7 +77,7 @@ nvim
 
 ```
 RemoteCppConfiger/                 # cloned anywhere
-├── nvimconfig/                    # → ~/.config/nvim (via symlink)
+├── nvimconfig/                    # copied to ~/.config/nvim by installer
 ├── ubuntu_install_scripts/        # Linux installer (Ubuntu 22 / 24)
 ├── macconfig/                     # Mac installer (Brewfile + scripts)
 ├── shared/
