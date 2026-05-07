@@ -32,7 +32,6 @@ brew "rustup"
 
 # Shell / history / prompt / runner
 brew "starship"
-brew "atuin"
 brew "just"
 brew "gh"
 

@@ -1,7 +1,7 @@
 # >>> RemoteCppConfiger >>>
 {{PLATFORM_PATH_BLOCK}}
 command -v starship >/dev/null && eval "$(starship init bash)"
-command -v atuin    >/dev/null && eval "$(atuin init bash)"
+command -v fzf      >/dev/null && eval "$(fzf --bash)"
 command -v zoxide   >/dev/null && eval "$(zoxide init bash)"
 command -v eza >/dev/null && alias ls='eza'
 command -v eza >/dev/null && alias ll='eza -l --git'

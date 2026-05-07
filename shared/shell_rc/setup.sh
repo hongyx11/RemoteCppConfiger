@@ -18,14 +18,18 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 BEGIN_MARK="# >>> RemoteCppConfiger >>>"
 END_MARK="# <<< RemoteCppConfiger <<<"
 
-# Patterns that match individual lines from older versions of setup_shell_rc.sh.
-# We delete matches before writing the fresh block to avoid duplicates.
+# Patterns that match individual lines from older versions of setup_shell_rc.sh,
+# or from the upstream atuin installer (which we no longer use). Matches are
+# deleted before writing the fresh block to avoid duplicates and stale init.
 LEGACY_PATTERNS=(
   '^export PATH="\$HOME/local/bin'
   '^command -v starship >/dev/null && eval'
   '^command -v atuin .*&& eval'
   '^\[ -f ".*/spack/share/spack/setup-env\.sh" \]'
   "^command -v eza >/dev/null && alias l[sla]="
+  '^\. "\$HOME/\.atuin/bin/env"'
+  '^eval "\$\(atuin init '
+  '^\[\[ -f ~/\.bash-preexec\.sh \]\] && source ~/\.bash-preexec\.sh'
 )
 
 wire() {

@@ -86,6 +86,34 @@ install_bat() {
   rm -rf bat.tar.gz "bat-$tag-x86_64-unknown-linux-musl"
 }
 
+# ── fzf ───────────────────────────────────────────────
+install_fzf() {
+  skip_if_present fzf && return
+  echo "==> fzf"
+  local tag; tag=$(gh_latest junegunn/fzf)
+  local stripped="${tag#v}"
+  dl "https://github.com/junegunn/fzf/releases/download/$tag/fzf-${stripped}-linux_amd64.tar.gz" fzf.tar.gz
+  rm -rf fzf-tmp
+  mkdir fzf-tmp
+  tar xf fzf.tar.gz -C fzf-tmp
+  install -m755 fzf-tmp/fzf "$BIN/fzf"
+  rm -rf fzf.tar.gz fzf-tmp
+}
+
+# ── zoxide ────────────────────────────────────────────
+install_zoxide() {
+  skip_if_present zoxide && return
+  echo "==> zoxide"
+  local tag; tag=$(gh_latest ajeetdsouza/zoxide)
+  local stripped="${tag#v}"
+  dl "https://github.com/ajeetdsouza/zoxide/releases/download/$tag/zoxide-${stripped}-x86_64-unknown-linux-musl.tar.gz" zoxide.tar.gz
+  rm -rf zoxide-tmp
+  mkdir zoxide-tmp
+  tar xf zoxide.tar.gz -C zoxide-tmp
+  install -m755 zoxide-tmp/zoxide "$BIN/zoxide"
+  rm -rf zoxide.tar.gz zoxide-tmp
+}
+
 # ── eza ───────────────────────────────────────────────
 install_eza() {
   skip_if_present eza && return
@@ -197,6 +225,8 @@ install_ninja
 install_rg
 install_fd
 install_bat
+install_fzf
+install_zoxide
 install_eza
 install_zellij
 install_stylua

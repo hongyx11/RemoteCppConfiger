@@ -64,29 +64,50 @@ link_path "$HOME/.local/share/nvim" "$PREFIX/share/nvim" dir
 link_path "$HOME/.local/state/nvim" "$PREFIX/state/nvim" dir
 link_path "$HOME/.cache/nvim"       "$PREFIX/cache/nvim" dir
 
-link_path "$HOME/.local/share/atuin" "$PREFIX/share/atuin" dir
-link_path "$HOME/.config/atuin"      "$PREFIX/etc/atuin" dir
-
 link_path "$HOME/.local/share/fonts/MapleMono-NF" "$PREFIX/share/fonts/MapleMono-NF" dir
 
-if [ -e "$PREFIX/cache/uv" ] || [ -e "$HOME/.cache/uv" ]; then
+# True if the path exists OR is a (possibly dangling) symlink.
+exists_or_link() { [ -e "$1" ] || [ -L "$1" ]; }
+
+# Tools this repo always installs on Linux: link unconditionally so $HOME stays
+# clean even before the tool has been run for the first time.
+link_path "$HOME/.cache/zellij"        "$PREFIX/cache/zellij"     dir
+link_path "$HOME/.local/share/zoxide"  "$PREFIX/share/zoxide"     dir
+link_path "$HOME/.spack"               "$PREFIX/state/spack-user" dir
+
+if exists_or_link "$PREFIX/cache/uv" || exists_or_link "$HOME/.cache/uv"; then
   link_path "$HOME/.cache/uv" "$PREFIX/cache/uv" dir
 fi
-if [ -e "$PREFIX/cache/npm" ] || [ -e "$HOME/.npm" ]; then
+if exists_or_link "$PREFIX/cache/npm" || exists_or_link "$HOME/.npm"; then
   link_path "$HOME/.npm" "$PREFIX/cache/npm" dir
 fi
-if [ -e "$PREFIX/share/nvm" ] || [ -e "$HOME/.nvm" ]; then
+if exists_or_link "$PREFIX/share/nvm" || exists_or_link "$HOME/.nvm"; then
   link_path "$HOME/.nvm" "$PREFIX/share/nvm" dir
 fi
 
-if [ -e "$PREFIX/etc/starship.toml" ] || [ -e "$HOME/.config/starship.toml" ]; then
+if exists_or_link "$PREFIX/etc/starship.toml" || exists_or_link "$HOME/.config/starship.toml"; then
   link_path "$HOME/.config/starship.toml" "$PREFIX/etc/starship.toml" file
 fi
 
-if [ -e "$PREFIX/share/tmux/oh-my-tmux" ] || [ -e "$HOME/.tmux" ]; then
+# Optional config dirs — lazy-linked so we don't litter $PREFIX/etc with empty
+# dirs for tools whose config the user hasn't created.
+if exists_or_link "$PREFIX/etc/zellij" || exists_or_link "$HOME/.config/zellij"; then
+  link_path "$HOME/.config/zellij" "$PREFIX/etc/zellij" dir
+fi
+if exists_or_link "$PREFIX/share/yazi" || exists_or_link "$HOME/.local/share/yazi"; then
+  link_path "$HOME/.local/share/yazi" "$PREFIX/share/yazi" dir
+fi
+if exists_or_link "$PREFIX/etc/yazi" || exists_or_link "$HOME/.config/yazi"; then
+  link_path "$HOME/.config/yazi" "$PREFIX/etc/yazi" dir
+fi
+if exists_or_link "$PREFIX/etc/lazygit" || exists_or_link "$HOME/.config/lazygit"; then
+  link_path "$HOME/.config/lazygit" "$PREFIX/etc/lazygit" dir
+fi
+
+if exists_or_link "$PREFIX/share/tmux/oh-my-tmux" || exists_or_link "$HOME/.tmux"; then
   link_path "$HOME/.tmux" "$PREFIX/share/tmux/oh-my-tmux" dir
 fi
-if [ -e "$PREFIX/etc/tmux.conf.local" ] || [ -e "$HOME/.tmux.conf.local" ]; then
+if exists_or_link "$PREFIX/etc/tmux.conf.local" || exists_or_link "$HOME/.tmux.conf.local"; then
   link_path "$HOME/.tmux.conf.local" "$PREFIX/etc/tmux.conf.local" file
 fi
 

@@ -2,7 +2,7 @@
 typeset -U path PATH fpath FPATH
 {{PLATFORM_PATH_BLOCK}}
 command -v starship >/dev/null && eval "$(starship init zsh)"
-command -v atuin    >/dev/null && eval "$(atuin init zsh)"
+command -v fzf      >/dev/null && eval "$(fzf --zsh)"
 command -v zoxide   >/dev/null && eval "$(zoxide init zsh)"
 command -v eza >/dev/null && alias ls='eza'
 command -v eza >/dev/null && alias ll='eza -l --git'

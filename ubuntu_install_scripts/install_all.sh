@@ -55,7 +55,6 @@ else
 fi
 run "just (cmd runner)" install_just.sh
 run "Starship prompt"  install_starship.sh
-run "atuin (history)"  install_atuin.sh
 run "Fonts (Maple Mono NF)" install_fonts.sh
 run "Tmux (Oh My Tmux)" install_tmux.sh
 run "User config/data links" setup_user_paths.sh

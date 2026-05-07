@@ -19,11 +19,11 @@ cd ~/code/RemoteCppConfiger/macconfig && ./install_all.sh
 
 ### What gets installed
 
-- All editor and CLI tools listed in `macconfig/Brewfile` (nvim, ripgrep, fd, bat, eza, zellij, lazygit, llvm, lua-language-server, pyright, ast-grep, stylua, tree-sitter, node, uv, rustup, starship, atuin, just, gh, fzf, zoxide, yazi, tmux, basictex, font-maple-mono-nf).
+- All editor and CLI tools listed in `macconfig/Brewfile` (nvim, ripgrep, fd, bat, eza, zellij, lazygit, llvm, lua-language-server, pyright, ast-grep, stylua, tree-sitter, node, uv, rustup, starship, just, gh, fzf, zoxide, yazi, tmux, basictex, font-maple-mono-nf).
 - Rust via `rustup-init`.
 - Spack at `$HOME/spack` (mirrors the Linux layout). To use a different location, set `SPACK_ROOT` before running `install_all.sh`.
 - Oh My Tmux into `~/.tmux`, with our customizations seeded into `~/.tmux.conf.local` (only if absent).
-- A managed block in `~/.zshrc` and `~/.bashrc` that sets PATH for brew + LLVM + cargo, initializes starship/atuin/zoxide, defines a lazy `spack()` stub, and (zsh-only) caches `compinit`.
+- A managed block in `~/.zshrc` and `~/.bashrc` that sets PATH for brew + LLVM + cargo, initializes starship/fzf/zoxide, defines a lazy `spack()` stub, and (zsh-only) caches `compinit`.
 
 ### Where things live
 

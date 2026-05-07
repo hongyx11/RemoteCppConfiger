@@ -25,7 +25,9 @@ fi
 ver="${MAPLE_MONO_VER:-}"
 if [ -z "$ver" ]; then
   json=$(curl -fsSL "https://api.github.com/repos/subframe7536/maple-font/releases/latest")
-  ver=$(printf '%s\n' "$json" | grep -m1 '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+  # Use herestring (not `printf | grep`) so an early `grep -m1` exit doesn't
+  # SIGPIPE the upstream and trip `set -o pipefail` with status 141.
+  ver=$(grep -m1 '"tag_name"' <<<"$json" | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
 fi
 if [ -z "$ver" ]; then
   echo "ERROR: could not resolve Maple Mono release tag." >&2
