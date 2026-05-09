@@ -195,6 +195,21 @@ install_lazygit() {
   rm -rf lazygit.tar.gz lazygit-tmp
 }
 
+# ── btop ──────────────────────────────────────────────
+install_btop() {
+  skip_if_present btop && return
+  echo "==> btop"
+  local tag; tag=$(gh_latest aristocratos/btop)
+  dl "https://github.com/aristocratos/btop/releases/download/$tag/btop-x86_64-unknown-linux-musl.tar.gz" btop.tar.gz
+  rm -rf btop-tmp
+  mkdir btop-tmp
+  tar xf btop.tar.gz -C btop-tmp
+  install -m755 btop-tmp/btop/bin/btop "$BIN/btop"
+  mkdir -p "$PREFIX/share/btop/themes"
+  cp -f btop-tmp/btop/themes/*.theme "$PREFIX/share/btop/themes/" 2>/dev/null || true
+  rm -rf btop.tar.gz btop-tmp
+}
+
 # ── yazi ──────────────────────────────────────────────
 install_yazi() {
   if [ -x "$BIN/yazi" ] && [ -x "$BIN/ya" ]; then
@@ -233,6 +248,7 @@ install_stylua
 install_treesitter
 install_astgrep
 install_lazygit
+install_btop
 install_yazi
 
 echo
