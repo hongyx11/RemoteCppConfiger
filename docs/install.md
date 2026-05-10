@@ -122,10 +122,10 @@ All package payloads land under one prefix: `$PREFIX` (`$HOME/local` by default)
 
 User-facing config (Neovim, tmux, starship, fonts) is installed directly into the conventional `$HOME` paths. Pre-existing files at those paths are moved aside with a `.bak.<timestamp>` suffix.
 
-`install_all.sh` installs the NVIDIA HPC SDK by default. To skip the large NVHPC download/install:
+`install_all.sh` skips the NVIDIA HPC SDK by default (the tarball is ~8.5 GB). To opt in:
 
 ```bash
-INSTALL_NVHPC=0 ./install_all.sh
+INSTALL_NVHPC=1 ./install_all.sh
 ```
 
 | Tool | Source | Notes |

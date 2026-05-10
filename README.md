@@ -41,10 +41,10 @@ One-liner with a custom install prefix:
 cd ~/code/RemoteCppConfiger && PREFIX=/media/volume/workspace bash ubuntu_install_scripts/install_all.sh
 ```
 
-The NVIDIA HPC SDK is included by default. To skip it:
+The NVIDIA HPC SDK is **off by default** (the tarball is ~8.5 GB). Opt in with:
 
 ```bash
-cd ~/code/RemoteCppConfiger && PREFIX=/media/volume/workspace INSTALL_NVHPC=0 bash ubuntu_install_scripts/install_all.sh
+cd ~/code/RemoteCppConfiger && PREFIX=/media/volume/workspace INSTALL_NVHPC=1 bash ubuntu_install_scripts/install_all.sh
 ```
 
 The installer keeps tool payloads under the prefix, including Spack at `$PREFIX/spack`, TinyTeX at `$PREFIX/.TinyTeX`, Rust and Python tool environments under `$PREFIX/lib`, Node under `$PREFIX/lib`, and command shims in `$PREFIX/bin`. User-facing config (Neovim, tmux, starship, fonts) is installed directly into the conventional `$HOME` paths; pre-existing files are moved aside with a `.bak.<timestamp>` suffix.

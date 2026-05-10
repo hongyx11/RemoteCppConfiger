@@ -3,7 +3,7 @@
 #
 # Override the prefix with: PREFIX=/path/to/prefix ./install_all.sh
 # Default prefix: $HOME/local
-# Skip NVIDIA HPC SDK with: INSTALL_NVHPC=0 ./install_all.sh
+# NVIDIA HPC SDK is OFF by default; opt in with: INSTALL_NVHPC=1 ./install_all.sh
 #
 # After running, ensure $PREFIX/bin is on PATH:
 #   export PATH="$PREFIX/bin:$PATH"
@@ -14,7 +14,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 export PREFIX="${PREFIX:-$HOME/local}"
 export SPACK_ROOT="${SPACK_ROOT:-$PREFIX/spack}"
-export INSTALL_NVHPC="${INSTALL_NVHPC:-1}"
+export INSTALL_NVHPC="${INSTALL_NVHPC:-0}"
 
 mkdir -p "$PREFIX/bin" "$PREFIX/lib" "$PREFIX/src" "$PREFIX/share" "$PREFIX/cache"
 
