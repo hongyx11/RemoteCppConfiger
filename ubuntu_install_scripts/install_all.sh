@@ -44,6 +44,7 @@ run "Rust toolchain"   install_rust.sh
 run "CLI tools"        install_clis.sh
 run "LSP servers"      install_lsp_servers.sh
 run "Codex CLI"        install_codex.sh
+run "Gemini CLI"       install_gemini.sh
 run "uv (Python pkg mgr)" install_uv.sh
 run "Python tools"     install_python_tools.sh
 run "Spack"            install_spack.sh
