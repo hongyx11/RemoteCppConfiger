@@ -1,6 +1,8 @@
 return {
   defaults = { lazy = true },
   install = { colorscheme = { "nvchad" } },
+  pkg = { sources = { "lazy", "packspec" } },
+  rocks = { enabled = false },
 
   ui = {
     icons = {
