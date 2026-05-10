@@ -14,6 +14,8 @@ NVHPC_VERSION="${NVHPC_VERSION:-25.7}"
 NVHPC_CUDA="${NVHPC_CUDA:-12.9}"
 NVHPC_PREFIX="$PREFIX/nvhpc"
 NVHPC_BIN="$NVHPC_PREFIX/Linux_x86_64/$NVHPC_VERSION/compilers/bin"
+BIN="$PREFIX/bin"
+mkdir -p "$BIN"
 
 if [ -x "$NVHPC_BIN/nvfortran" ]; then
   echo "nvhpc $NVHPC_VERSION already installed at $NVHPC_PREFIX"
@@ -64,6 +66,7 @@ NVHPC_SILENT=true \
   "$EXTRACT_DIR/install" || true   # installer's final post-step can exit non-zero; verify below
 
 echo "==> Cleaning up staging dir ..."
+cd "$PREFIX"
 rm -rf "$EXTRACT_DIR"
 rmdir "$STAGE" 2>/dev/null || true
 
@@ -71,5 +74,11 @@ if [ ! -x "$NVHPC_BIN/nvfortran" ]; then
   echo "ERROR: install did not produce $NVHPC_BIN/nvfortran" >&2
   exit 1
 fi
+
+for t in nvc nvc++ nvfortran nvcc; do
+  if [ -x "$NVHPC_BIN/$t" ]; then
+    ln -sf "$NVHPC_BIN/$t" "$BIN/$t"
+  fi
+done
 
 echo "    $("$NVHPC_BIN/nvfortran" --version | head -2 | tail -1) installed."

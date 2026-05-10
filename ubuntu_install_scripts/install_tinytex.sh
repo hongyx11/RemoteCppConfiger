@@ -22,7 +22,7 @@ fi
 if [ ! -d "$TINYTEX_DIR" ]; then
   echo "==> Installing TinyTeX → $TINYTEX_DIR"
   curl -sSL "https://yihui.org/tinytex/install-bin-unix.sh" \
-    | env TINYTEX_DIR="$(dirname "$TINYTEX_DIR")" sh -s -- --no-path
+    | env TINYTEX_DIR="$(dirname "$TINYTEX_DIR")" sh
 fi
 
 TT_BIN="$(find "$TINYTEX_DIR/bin" -mindepth 1 -maxdepth 1 -type d | head -1)"
