@@ -4,6 +4,8 @@
 #
 # tree-sitter and yazi are glibc-aware: latest GNU prebuilts can require
 # glibc 2.39 (Ubuntu 24.04), while Ubuntu 22.04 has glibc 2.35.
+# On old glibc tree-sitter is built from source via cargo (needs Rust toolchain
+# from install_rust.sh, which runs earlier in install_all.sh).
 
 set -euo pipefail
 
@@ -146,27 +148,41 @@ install_stylua() {
 }
 
 # ── tree-sitter (auto-pin for glibc) ──────────────────
-# Latest releases need glibc 2.39 (Ubuntu 24.04). On glibc < 2.39 we pin to v0.22.6.
+# nvim-treesitter (main branch) requires tree-sitter-cli >= 0.26. Latest GNU
+# prebuilts need glibc 2.39 (Ubuntu 24.04); on older glibc we build from source
+# via cargo with --no-default-features to skip the WASM runtime (which pulls in
+# libclang via bindgen). The WASM feature is only needed for `tree-sitter build
+# --wasm` and `tree-sitter playground` — nvim-treesitter uses neither.
 install_treesitter() {
   skip_if_present tree-sitter && return
   local glibc; glibc=$(host_glibc)
   local ver="${TREE_SITTER_VER:-}"
   if [ -z "$ver" ]; then
     if glibc_ge 2.39 "$glibc"; then
-      ver="latest"  # glibc >= 2.39, latest release
+      ver="latest"  # glibc >= 2.39, prebuilt latest release
     else
-      ver="v0.22.6" # last release that runs on glibc 2.35
+      ver="cargo"   # old glibc: build from source
     fi
   fi
   echo "==> tree-sitter ($ver, glibc $glibc)"
-  if [ "$ver" = "latest" ]; then
+  if [ "$ver" = "cargo" ]; then
+    if ! command -v cargo >/dev/null 2>&1; then
+      echo "  cargo not on PATH; run install_rust.sh first." >&2
+      return 1
+    fi
+    cargo install tree-sitter-cli --no-default-features
+    ln -sf "${CARGO_HOME:-$PREFIX/lib/cargo}/bin/tree-sitter" "$BIN/tree-sitter"
+  elif [ "$ver" = "latest" ]; then
     dl "https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz" tree-sitter.gz
+    gunzip -f tree-sitter.gz
+    install -m755 tree-sitter "$BIN/tree-sitter"
+    rm -f tree-sitter
   else
     dl "https://github.com/tree-sitter/tree-sitter/releases/download/$ver/tree-sitter-linux-x64.gz" tree-sitter.gz
+    gunzip -f tree-sitter.gz
+    install -m755 tree-sitter "$BIN/tree-sitter"
+    rm -f tree-sitter
   fi
-  gunzip -f tree-sitter.gz
-  install -m755 tree-sitter "$BIN/tree-sitter"
-  rm -f tree-sitter
 }
 
 # ── ast-grep ──────────────────────────────────────────
