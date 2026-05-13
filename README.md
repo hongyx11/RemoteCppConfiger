@@ -13,7 +13,8 @@ Designed to work on hosts with **or without** sudo. The only thing that branches
 - **Editor**: Neovim (latest) + an NvChad-derived config tuned for C++, MPI, CMake.
 - **C++ toolchain**: gcc/g++ 12 (apt or `spack install gcc@12`), plus prebuilt LLVM 18.1.8 (clangd, clang-format, clang-tidy, libomp).
 - **Package manager**: Spack, with gcc-12 registered as the external compiler.
-- **LSPs**: clangd, pyright, lua-language-server, html, css.
+- **LSPs**: clangd, pyright, lua-language-server, cmake-language-server, html, css.
+- **CMake helpers**: cmake-format, cmake-lint (via `cmakelang`).
 - **CLI**: ripgrep, fd, bat, fzf, zoxide, eza, zellij, ast-grep, stylua, tree-sitter, lazygit, yazi.
 - **Terminal multiplexer**: Oh My Tmux config (Nord theme, mouse on, TPM with `tmux-sensible` and `tmux-pomodoro-plus`).
 - **Languages**: Rust (rustup), Node 22, Python 3 (system).
@@ -47,7 +48,9 @@ The NVIDIA HPC SDK is **off by default** (the tarball is ~8.5 GB). Opt in with:
 cd ~/code/RemoteCppConfiger && PREFIX=/media/volume/workspace INSTALL_NVHPC=1 bash ubuntu_install_scripts/install_all.sh
 ```
 
-The installer keeps tool payloads under the prefix, including Spack at `$PREFIX/spack`, TinyTeX at `$PREFIX/.TinyTeX`, Rust and Python tool environments under `$PREFIX/lib`, Node under `$PREFIX/lib`, and command shims in `$PREFIX/bin`. User-facing config (Neovim, tmux, starship, fonts) is installed directly into the conventional `$HOME` paths; pre-existing files are moved aside with a `.bak.<timestamp>` suffix.
+Full TeX Live is **off by default** (~7 GB). Opt in with `INSTALL_LATEX=1`.
+
+The installer keeps tool payloads under the prefix, including Spack at `$PREFIX/spack`, TeX Live at `$PREFIX/texlive` (when enabled), Rust and Python tool environments under `$PREFIX/lib`, Node under `$PREFIX/lib`, and command shims in `$PREFIX/bin`. User-facing config (Neovim, tmux, starship, fonts) is installed directly into the conventional `$HOME` paths; pre-existing files are moved aside with a `.bak.<timestamp>` suffix.
 
 For the no-sudo path, see [`docs/install.md`](docs/install.md).
 

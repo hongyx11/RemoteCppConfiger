@@ -24,20 +24,28 @@ echo "==> Building Neovim from source ..."
 BUILD_DIR="$SRC/neovim-build"
 INSTALL_DIR="$LIB/nvim"
 
-if [ -d "$BUILD_DIR/neovim" ]; then
-  echo "    Updating existing source ..."
-  cd "$BUILD_DIR/neovim"
-  git fetch --tags
-else
-  mkdir -p "$BUILD_DIR"
-  cd "$BUILD_DIR"
-  git clone https://github.com/neovim/neovim.git
-  cd neovim
+# Resolve the latest stable release tag via the GitHub API (no auth, no jq).
+LATEST_TAG=$(curl -fsSL https://api.github.com/repos/neovim/neovim/releases/latest \
+  | sed -nE 's/.*"tag_name":[[:space:]]*"([^"]+)".*/\1/p' | head -1)
+if [ -z "$LATEST_TAG" ]; then
+  echo "  error: could not resolve latest neovim release tag from GitHub API." >&2
+  exit 1
 fi
+echo "    Latest release: $LATEST_TAG"
 
-LATEST_TAG=$(git describe --tags "$(git rev-list --tags --max-count=1)")
+TARBALL_URL="https://github.com/neovim/neovim/archive/refs/tags/${LATEST_TAG}.tar.gz"
+SRC_DIR="$BUILD_DIR/neovim-${LATEST_TAG#v}"
+
+rm -rf "$BUILD_DIR"
+mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
+echo "    Downloading $TARBALL_URL"
+curl -fL --retry 3 --retry-delay 2 -o neovim.tar.gz "$TARBALL_URL"
+tar xf neovim.tar.gz
+rm -f neovim.tar.gz
+
+cd "$SRC_DIR"
 echo "    Building $LATEST_TAG ..."
-git checkout "$LATEST_TAG"
 
 make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$INSTALL_DIR"
 make install

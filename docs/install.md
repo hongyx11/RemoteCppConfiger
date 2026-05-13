@@ -118,7 +118,7 @@ cd ~/.config/nvim/install_dependencies
 ./install_all.sh
 ```
 
-All package payloads land under one prefix: `$PREFIX` (`$HOME/local` by default). Spack lands in `$PREFIX/spack`, TinyTeX in `$PREFIX/.TinyTeX`, Rust/Python tool environments and Node land under `$PREFIX/lib`, and command shims/symlinks land in `$PREFIX/bin`.
+All package payloads land under one prefix: `$PREFIX` (`$HOME/local` by default). Spack lands in `$PREFIX/spack`, full TeX Live in `$PREFIX/texlive` (only when `INSTALL_LATEX=1`), Rust/Python tool environments and Node land under `$PREFIX/lib`, and command shims/symlinks land in `$PREFIX/bin`.
 
 User-facing config (Neovim, tmux, starship, fonts) is installed directly into the conventional `$HOME` paths. Pre-existing files at those paths are moved aside with a `.bak.<timestamp>` suffix.
 

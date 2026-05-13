@@ -4,6 +4,7 @@
 # Override the prefix with: PREFIX=/path/to/prefix ./install_all.sh
 # Default prefix: $HOME/local
 # NVIDIA HPC SDK is OFF by default; opt in with: INSTALL_NVHPC=1 ./install_all.sh
+# Full TeX Live (LaTeX) is OFF by default; opt in with: INSTALL_LATEX=1 ./install_all.sh
 #
 # After running, ensure $PREFIX/bin is on PATH:
 #   export PATH="$PREFIX/bin:$PATH"
@@ -15,6 +16,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 export PREFIX="${PREFIX:-$HOME/local}"
 export SPACK_ROOT="${SPACK_ROOT:-$PREFIX/spack}"
 export INSTALL_NVHPC="${INSTALL_NVHPC:-0}"
+export INSTALL_LATEX="${INSTALL_LATEX:-0}"
 
 mkdir -p "$PREFIX/bin" "$PREFIX/lib" "$PREFIX/src" "$PREFIX/share" "$PREFIX/cache"
 
@@ -28,6 +30,7 @@ echo " RemoteCppConfiger install"
 echo " PREFIX: $PREFIX"
 echo " SPACK_ROOT: $SPACK_ROOT"
 echo " INSTALL_NVHPC: $INSTALL_NVHPC"
+echo " INSTALL_LATEX: $INSTALL_LATEX"
 echo "============================================"
 
 run() {
@@ -47,8 +50,15 @@ run "Codex CLI"        install_codex.sh
 run "Gemini CLI"       install_gemini.sh
 run "uv (Python pkg mgr)" install_uv.sh
 run "Python tools"     install_python_tools.sh
+run "CMake LSP + format" install_cmake_tools.sh
 run "Spack"            install_spack.sh
-run "TinyTeX (LaTeX)"  install_tinytex.sh
+if [ "$INSTALL_LATEX" != "0" ] && [ "$INSTALL_LATEX" != "false" ] && [ "$INSTALL_LATEX" != "no" ]; then
+  run "TeX Live (full)"  install_texlive.sh
+else
+  echo
+  echo "---- TeX Live (full) ----"
+  echo "  skipped (INSTALL_LATEX=$INSTALL_LATEX)"
+fi
 if [ "$INSTALL_NVHPC" != "0" ] && [ "$INSTALL_NVHPC" != "false" ] && [ "$INSTALL_NVHPC" != "no" ]; then
   run "NVIDIA HPC SDK"  install_nvhpc.sh
 else
