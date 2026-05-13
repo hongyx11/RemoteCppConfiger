@@ -89,6 +89,8 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
+    lazy = false,
+    build = ":TSUpdate",
     config = function()
       -- Ensure C compiler is findable (GUI launches may lack PATH)
       if vim.fn.executable("cc") == 0 and vim.fn.executable("gcc") == 0 then
@@ -101,15 +103,37 @@ return {
         end
       end
 
-      -- Auto-install parsers (only missing ones)
-      local parsers = { "vim", "lua", "vimdoc", "html", "css", "c", "cpp", "python" }
-      local installed = require("nvim-treesitter").get_installed()
-      local to_install = vim.tbl_filter(function(p)
-        return not vim.tbl_contains(installed, p)
-      end, parsers)
-      if #to_install > 0 then
-        vim.cmd("TSInstall " .. table.concat(to_install, " "))
+      -- Neovim 0.10+ ships c/lua/vim/vimdoc/query/markdown/markdown_inline parsers
+      -- and matching queries; don't override them or queries fall out of sync.
+      local parsers = { "html", "css", "cpp", "python" }
+      -- A language is "installed" only if BOTH parser .so and query dir exist.
+      -- Plugin's bundled parser/ dir can be populated by :TSUpdate while queries
+      -- are missing from the user install dir — that combination leaves buffers
+      -- parsed but unhighlighted, so we check both.
+      local site = vim.fs.joinpath(vim.fn.stdpath("data"), "site")
+      local missing = {}
+      for _, p in ipairs(parsers) do
+        local has_parser = #vim.api.nvim_get_runtime_file("parser/" .. p .. ".so", false) > 0
+        local has_queries = vim.uv.fs_stat(vim.fs.joinpath(site, "queries", p)) ~= nil
+        if not (has_parser and has_queries) then
+          table.insert(missing, p)
+        end
       end
+      if #missing > 0 then
+        require("nvim-treesitter").install(missing)
+      end
+
+      -- Main branch doesn't auto-enable highlight/indent — must start per buffer.
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+          local ft = vim.bo[args.buf].filetype
+          if ft == "" then return end
+          local lang = vim.treesitter.language.get_lang(ft)
+          if not lang then return end
+          if not pcall(vim.treesitter.start, args.buf, lang) then return end
+          vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
+      })
     end,
   },
 
