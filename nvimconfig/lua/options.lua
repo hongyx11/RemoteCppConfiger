@@ -13,7 +13,22 @@ opt.number = true
 opt.relativenumber = true
 
 -- Clipboard settings
-opt.clipboard = "unnamed"
+opt.clipboard = "unnamedplus"
+
+-- OSC 52 clipboard provider for SSH sessions (sends yanks to local terminal clipboard)
+if vim.env.SSH_TTY then
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+      ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+    },
+    paste = {
+      ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+    },
+  }
+end
 
 -- Auto-indent settings (CLion-like behavior)
 opt.autoindent = true      -- Copy indent from current line when starting new line
