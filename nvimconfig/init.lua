@@ -1,5 +1,45 @@
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
 vim.g.mapleader = " "
+
+if vim.env.SSH_TTY or vim.env.ZELLIJ then
+  local osc52 = require "vim.ui.clipboard.osc52"
+  local cache = {
+    ["+"] = { lines = {}, regtype = "v" },
+    ["*"] = { lines = {}, regtype = "v" },
+  }
+
+  local function copy(reg)
+    local osc52_copy = osc52.copy(reg)
+
+    return function(lines, regtype)
+      cache[reg] = {
+        lines = vim.list_slice(lines),
+        regtype = regtype or "v",
+      }
+      osc52_copy(lines)
+    end
+  end
+
+  local function paste(reg)
+    return function()
+      local item = cache[reg]
+      return { vim.list_slice(item.lines), item.regtype }
+    end
+  end
+
+  vim.g.clipboard = {
+    name = "OSC 52 copy only",
+    copy = {
+      ["+"] = copy("+"),
+      ["*"] = copy("*"),
+    },
+    paste = {
+      ["+"] = paste("+"),
+      ["*"] = paste("*"),
+    },
+  }
+end
+
 -- vim.opt.colorcolumn = "120"
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
