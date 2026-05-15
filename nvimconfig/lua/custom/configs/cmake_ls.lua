@@ -1,15 +1,12 @@
--- cmake-language-server config
--- Server binary: cmake-language-server (installed via `uv tool install`)
+-- neocmakelsp config
+-- Server binary: neocmakelsp (installed via `cargo install neocmakelsp`)
 local nvlsp = require "nvchad.configs.lspconfig"
 
 return {
-  cmd = { "cmake-language-server" },
+  cmd = { "neocmakelsp", "--stdio" },
   filetypes = { "cmake" },
   root_markers = { "CMakeLists.txt", "cmake", ".git" },
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
-  init_options = {
-    buildDirectory = "build",
-  },
 }

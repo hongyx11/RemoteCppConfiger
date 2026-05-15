@@ -2,6 +2,7 @@
 # Install LSP servers into $PREFIX (default $HOME/local).
 #   pyright, html/css       → npm into $PREFIX/lib, wrapped in $PREFIX/bin
 #   lua-language-server     → prebuilt tarball
+#   neocmakelsp             → cargo install into $PREFIX
 
 set -euo pipefail
 
@@ -95,9 +96,23 @@ WRAP
   chmod +x "$BIN/lua-language-server"
 }
 
+# ── neocmakelsp (cargo) ───────────────────────────────
+install_neocmakelsp() {
+  if [ -x "$BIN/neocmakelsp" ]; then
+    echo "  neocmakelsp already installed, skipping."; return
+  fi
+  if ! command -v cargo >/dev/null; then
+    echo "  cargo missing — run install_rust.sh first. Skipping neocmakelsp."
+    return 1
+  fi
+  echo "==> neocmakelsp"
+  cargo install neocmakelsp --root "$PREFIX" --locked >/dev/null 2>&1
+}
+
 install_pyright             || true
 install_vscode_langservers  || true
 install_lua_ls
+install_neocmakelsp         || true
 
 echo
 echo "    LSP servers installed to $BIN"

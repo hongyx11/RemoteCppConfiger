@@ -13,7 +13,7 @@ Designed to work on hosts with **or without** sudo. The only thing that branches
 - **Editor**: Neovim (latest) + an NvChad-derived config tuned for C++, MPI, CMake.
 - **C++ toolchain**: gcc/g++ 12 (apt or `spack install gcc@12`), plus prebuilt LLVM 18.1.8 (clangd, clang-format, clang-tidy, libomp).
 - **Package manager**: Spack, with gcc-12 registered as the external compiler.
-- **LSPs**: clangd, pyright, lua-language-server, cmake-language-server, html, css.
+- **LSPs**: clangd, pyright, lua-language-server, neocmakelsp, html, css.
 - **CMake helpers**: cmake-format, cmake-lint (via `cmakelang`).
 - **CLI**: ripgrep, fd, bat, fzf, zoxide, eza, zellij, ast-grep, stylua, tree-sitter, lazygit, yazi.
 - **Terminal multiplexer**: Oh My Tmux config (Nord theme, mouse on, TPM with `tmux-sensible` and `tmux-pomodoro-plus`).

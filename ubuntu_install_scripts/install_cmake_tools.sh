@@ -1,7 +1,8 @@
 #!/bin/bash
-# Install CMake LSP + formatter/linter via `uv tool install`.
-#   cmake-language-server   — LSP for CMakeLists.txt / *.cmake
+# Install CMake formatter/linter via `uv tool install`.
 #   cmakelang               — cmake-format, cmake-lint, cmake-annotate
+#
+# The LSP itself (neocmakelsp) is installed from install_lsp_servers.sh.
 #
 # Each tool gets its own isolated venv under $PREFIX/lib/uv-tools/,
 # with command shims placed in $PREFIX/bin.
@@ -32,9 +33,7 @@ install_tool() {
   "$BIN/uv" tool install --force "$pkg" >/dev/null
 }
 
-install_tool cmake-language-server cmake-language-server
-install_tool cmakelang             cmake-format
+install_tool cmakelang cmake-format
 
 echo
-echo "    $("$BIN/cmake-language-server" --version 2>&1 | head -1 || true)"
 echo "    $("$BIN/cmake-format" --version 2>&1 | head -1 || true)"

@@ -26,7 +26,7 @@ local lua_ls_config = require("custom.configs.lua_ls")
 vim.lsp.config("lua_ls", lua_ls_config)
 vim.lsp.enable("lua_ls")
 
--- Setup cmake-language-server (installed via `uv tool install cmake-language-server`)
+-- Setup neocmakelsp (installed via `cargo install neocmakelsp`)
 local cmake_ls_config = require("custom.configs.cmake_ls")
 vim.lsp.config("cmake", cmake_ls_config)
 vim.lsp.enable("cmake")
