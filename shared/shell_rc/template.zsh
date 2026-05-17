@@ -1,6 +1,7 @@
 # >>> RemoteCppConfiger >>>
 typeset -U path PATH fpath FPATH
 {{PLATFORM_PATH_BLOCK}}
+export CMAKE_GENERATOR=Ninja
 command -v starship >/dev/null && eval "$(starship init zsh)"
 command -v fzf      >/dev/null && eval "$(fzf --zsh)"
 command -v zoxide   >/dev/null && eval "$(zoxide init zsh)"
