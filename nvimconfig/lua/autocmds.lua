@@ -62,6 +62,28 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
   command = "checktime",
 })
 
+-- Auto-save the previous file buffer when switching buffers
+vim.api.nvim_create_autocmd("BufLeave", {
+  callback = function(ev)
+    if not vim.api.nvim_buf_is_valid(ev.buf) then
+      return
+    end
+
+    local bo = vim.bo[ev.buf]
+    if bo.buftype ~= "" or not bo.modified or not bo.modifiable or bo.readonly then
+      return
+    end
+
+    if vim.api.nvim_buf_get_name(ev.buf) == "" then
+      return
+    end
+
+    vim.api.nvim_buf_call(ev.buf, function()
+      vim.cmd("silent! noautocmd update")
+    end)
+  end,
+})
+
 -- LaTeX render in markdown
 require("custom.latex-render").setup()
 
