@@ -76,7 +76,23 @@ end, { desc = "Format selection" })
 map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic list" })
 
 -- LSP Diagnostics
+local function osc52_copy(text)
+  local encoded = vim.fn.system({ "base64" }, text):gsub("%s+", "")
+  io.write("\027]52;c;" .. encoded .. "\a")
+  io.flush()
+end
+
 map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show error under cursor" })
+map("n", "<leader>ce", function()
+  local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
+  if #diagnostics == 0 then
+    vim.notify("No diagnostic on this line", vim.log.levels.WARN)
+    return
+  end
+
+  osc52_copy(diagnostics[1].message)
+  vim.notify("Copied diagnostic to local clipboard")
+end, { desc = "Copy diagnostic via OSC52" })
 map("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
 map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
 map("n", "<leader>qa", function() vim.diagnostic.setqflist() end, { desc = "All project diagnostics" })
@@ -385,4 +401,3 @@ map("n", "<leader>tD", function()
   vim.fn.system("tmux load-buffer -", table.concat(msgs, "\n"))
   vim.notify(#diags .. " diagnostics copied to tmux buffer", vim.log.levels.INFO)
 end, { desc = "Copy all diagnostics to tmux buffer" })
-

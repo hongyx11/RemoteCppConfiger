@@ -37,4 +37,8 @@ M.ui = {
   }
 }
 
+M.mason = {
+  pkgs = { "neocmakelsp" },
+}
+
 return M

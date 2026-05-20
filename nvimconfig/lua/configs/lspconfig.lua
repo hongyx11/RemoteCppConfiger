@@ -26,10 +26,17 @@ local lua_ls_config = require("custom.configs.lua_ls")
 vim.lsp.config("lua_ls", lua_ls_config)
 vim.lsp.enable("lua_ls")
 
--- Setup neocmakelsp (installed via `cargo install neocmakelsp`)
-local cmake_ls_config = require("custom.configs.cmake_ls")
-vim.lsp.config("cmake", cmake_ls_config)
-vim.lsp.enable("cmake")
+-- Setup CMake Language Server
+local neocmake_capabilities = vim.lsp.protocol.make_client_capabilities()
+neocmake_capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+vim.lsp.config("neocmake", {
+  cmd = { "neocmakelsp", "stdio" },
+  capabilities = neocmake_capabilities,
+  filetypes = { "cmake" },
+  root_markers = { ".neocmake.toml", ".git", "build", "cmake" },
+})
+vim.lsp.enable("neocmake")
 
 
 -- Diagnostic configuration

@@ -8,6 +8,8 @@ return {
   -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
+    event = { "User FilePost", "BufReadPost", "BufNewFile" },
+    cmd = { "LspInfo", "LspLog", "LspStart", "LspStop", "LspRestart" },
     config = function()
       require "configs.lspconfig"
     end,
@@ -481,14 +483,21 @@ return {
         local api = require("nvim-tree.api")
         api.config.mappings.default_on_attach(bufnr)
         local opts = { buffer = bufnr, noremap = true, silent = true }
+        local function osc52_copy(text)
+          local encoded = vim.fn.system({ "base64" }, text):gsub("%s+", "")
+          io.write("\027]52;c;" .. encoded .. "\a")
+          io.flush()
+        end
+
         vim.keymap.set("n", "<Left>", api.node.navigate.parent_close, opts)
         vim.keymap.set("n", "<Right>", api.node.open.edit, opts)
         vim.keymap.set("n", "c", function()
           local node = api.tree.get_node_under_cursor()
           if node then
             api.fs.copy.node()
+            osc52_copy(node.name)
             vim.fn.system({ "tmux", "set-buffer", node.absolute_path })
-            vim.notify("Copied: " .. node.name .. " (also to tmux buffer)")
+            vim.notify("Copied filename to local clipboard: " .. node.name)
           end
         end, opts)
       end,
