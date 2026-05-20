@@ -1,3 +1,5 @@
+default_layout "compact"
+
 keybinds {
     shared_except "locked" {
         bind "Alt 1" { GoToTab 1; }
