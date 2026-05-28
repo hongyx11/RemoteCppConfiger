@@ -15,6 +15,7 @@ brew "tmux"
 brew "zellij"
 brew "lazygit"
 brew "btop"
+brew "mr"
 
 # C/C++ toolchain (provides clangd, clang-format, clang-tidy)
 brew "llvm"

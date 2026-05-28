@@ -136,6 +136,20 @@ install_zellij() {
   rm -rf zellij.tar.gz "./zellij"
 }
 
+# ── myrepos ───────────────────────────────────────────
+install_myrepos() {
+  skip_if_present mr && return
+  echo "==> myrepos"
+  command -v git >/dev/null || {
+    echo "ERROR: git is required to install myrepos." >&2
+    return 1
+  }
+  rm -rf myrepos
+  git clone --depth 1 git://myrepos.branchable.com/ myrepos
+  install -m755 myrepos/mr "$BIN/mr"
+  rm -rf myrepos
+}
+
 # ── stylua ────────────────────────────────────────────
 install_stylua() {
   skip_if_present stylua && return
@@ -260,6 +274,7 @@ install_fzf
 install_zoxide
 install_eza
 install_zellij
+install_myrepos
 install_stylua
 install_treesitter
 install_astgrep

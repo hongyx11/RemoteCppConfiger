@@ -20,7 +20,7 @@ cd ~/code/RemoteCppConfiger/macconfig && ./install_all.sh
 
 ### What gets installed
 
-- All editor and CLI tools listed in `macconfig/Brewfile` (nvim, ripgrep, fd, bat, eza, zellij, lazygit, llvm, lua-language-server, pyright, ast-grep, stylua, tree-sitter, node, uv, rustup, starship, just, gh, fzf, zoxide, yazi, tmux, basictex, font-maple-mono-nf).
+- All editor and CLI tools listed in `macconfig/Brewfile` (nvim, ripgrep, fd, bat, eza, zellij, lazygit, mr/myrepos, llvm, lua-language-server, pyright, ast-grep, stylua, tree-sitter, node, uv, rustup, starship, just, gh, fzf, zoxide, yazi, tmux, basictex, font-maple-mono-nf), plus Python CLI tools such as gita.
 - Rust via `rustup-init`.
 - Spack at `$HOME/spack` (mirrors the Linux layout). To use a different location, set `SPACK_ROOT` before running `install_all.sh`.
 - Oh My Tmux into `~/.tmux`, with our customizations seeded into `~/.tmux.conf.local` (only if absent).
@@ -140,6 +140,8 @@ INSTALL_NVHPC=1 ./install_all.sh
 | `tree-sitter` | github prebuilt | latest on Ubuntu 24.04; pinned to v0.22.6 on Ubuntu 22.04 (auto-detected) |
 | `rg`, `fd`, `bat`, `eza`, `zellij`, `stylua`, `ast-grep`/`sg` | github prebuilts | rust-based CLIs |
 | `lazygit`, `yazi` | github prebuilts | TUI helpers |
+| `mr` | myrepos source checkout | multi-repository manager |
+| `gita` | PyPI via uv | multi-repository Git dashboard/runner |
 
 ## Stage 4 — verify
 
