@@ -48,7 +48,7 @@ The NVIDIA HPC SDK is **off by default** (the tarball is ~8.5 GB). Opt in with:
 cd ~/code/RemoteCppConfiger && PREFIX=/media/volume/workspace INSTALL_NVHPC=1 bash ubuntu_install_scripts/install_all.sh
 ```
 
-Full TeX Live is **off by default** (~7 GB). Opt in with `INSTALL_LATEX=1`.
+Full LaTeX means full TeX Live only; lightweight variants such as TinyTeX/BasicTeX are not installed. It is **off by default** (~7 GB on Linux). Opt in with `INSTALL_LATEX=1`.
 
 The installer keeps tool payloads under the prefix, including Spack at `$PREFIX/spack`, TeX Live at `$PREFIX/texlive` (when enabled), Rust and Python tool environments under `$PREFIX/lib`, Node under `$PREFIX/lib`, and command shims in `$PREFIX/bin`. User-facing config (Neovim, tmux, starship, fonts) is installed directly into the conventional `$HOME` paths; pre-existing files are moved aside with a `.bak.<timestamp>` suffix.
 
@@ -61,7 +61,7 @@ cd ~/code/RemoteCppConfiger/macconfig
 ./install_all.sh
 ```
 
-Prerequisites: [Homebrew](https://brew.sh), Xcode Command Line Tools (for `git`).
+Prerequisites: [Homebrew](https://brew.sh), Xcode Command Line Tools (for `git`). The macOS installer uses full MacTeX, not BasicTeX.
 
 Then launch:
 

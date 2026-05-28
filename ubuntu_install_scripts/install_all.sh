@@ -5,6 +5,7 @@
 # Default prefix: $HOME/local
 # NVIDIA HPC SDK is OFF by default; opt in with: INSTALL_NVHPC=1 ./install_all.sh
 # Full TeX Live (LaTeX) is OFF by default; opt in with: INSTALL_LATEX=1 ./install_all.sh
+# Lightweight TeX variants are intentionally not installed.
 #
 # After running, ensure $PREFIX/bin is on PATH:
 #   export PATH="$PREFIX/bin:$PATH"

@@ -20,7 +20,7 @@ cd ~/code/RemoteCppConfiger/macconfig && ./install_all.sh
 
 ### What gets installed
 
-- All editor and CLI tools listed in `macconfig/Brewfile` (nvim, ripgrep, fd, bat, eza, zellij, lazygit, mr/myrepos, opencode, llvm, lua-language-server, pyright, ast-grep, stylua, tree-sitter, node, uv, rustup, starship, just, gh, fzf, zoxide, yazi, tmux, basictex, font-maple-mono-nf), plus Python CLI tools such as gita.
+- All editor and CLI tools listed in `macconfig/Brewfile` (nvim, ripgrep, fd, bat, eza, zellij, lazygit, mr/myrepos, opencode, llvm, lua-language-server, pyright, ast-grep, stylua, tree-sitter, node, uv, rustup, starship, just, gh, fzf, zoxide, yazi, tmux, mactex, font-maple-mono-nf), plus Python CLI tools such as gita.
 - Rust via `rustup-init`.
 - Spack at `$HOME/spack` (mirrors the Linux layout). To use a different location, set `SPACK_ROOT` before running `install_all.sh`.
 - Oh My Tmux into `~/.tmux`, with our customizations seeded into `~/.tmux.conf.local` (only if absent).
@@ -119,6 +119,8 @@ cd ~/.config/nvim/install_dependencies
 ```
 
 All package payloads land under one prefix: `$PREFIX` (`$HOME/local` by default). Spack lands in `$PREFIX/spack`, full TeX Live in `$PREFIX/texlive` (only when `INSTALL_LATEX=1`), Rust/Python tool environments and Node land under `$PREFIX/lib`, and command shims/symlinks land in `$PREFIX/bin`.
+
+When LaTeX is requested, the installer uses full TeX Live only. Lightweight alternatives such as TinyTeX or BasicTeX are intentionally not installed.
 
 User-facing config (Neovim, tmux, starship, fonts) is installed directly into the conventional `$HOME` paths. Pre-existing files at those paths are moved aside with a `.bak.<timestamp>` suffix.
 

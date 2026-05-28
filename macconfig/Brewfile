@@ -38,8 +38,8 @@ brew "starship"
 brew "just"
 brew "gh"
 
-# LaTeX (small footprint vs full mactex)
-cask "basictex"
+# LaTeX (full distribution only)
+cask "mactex"
 
 # Fonts
 cask "font-maple-mono-nf"
