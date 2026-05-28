@@ -36,6 +36,7 @@ brew bundle --file="$SCRIPT_DIR/Brewfile"
 run "Rust toolchain" install_rust.sh
 run "Python (uv)"    install_python.sh
 run "Python CLI tools" install_python_tools.sh
+run "OpenCode CLI"   install_opencode.sh
 run "Spack"          install_spack.sh
 run "Tmux (Oh My Tmux)" install_tmux.sh
 

@@ -48,6 +48,7 @@ run "CLI tools"        install_clis.sh
 run "LSP servers"      install_lsp_servers.sh
 run "Codex CLI"        install_codex.sh
 run "Gemini CLI"       install_gemini.sh
+run "OpenCode CLI"     install_opencode.sh
 run "uv (Python pkg mgr)" install_uv.sh
 run "Python tools"     install_python_tools.sh
 run "CMake LSP + format" install_cmake_tools.sh

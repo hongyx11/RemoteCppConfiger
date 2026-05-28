@@ -11,6 +11,7 @@ brew "zoxide"
 brew "yazi"
 
 # Multiplexers / git UI
+brew "anomalyco/tap/opencode"
 brew "tmux"
 brew "zellij"
 brew "lazygit"

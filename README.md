@@ -15,7 +15,7 @@ Designed to work on hosts with **or without** sudo. The only thing that branches
 - **Package manager**: Spack, with gcc-12 registered as the external compiler.
 - **LSPs**: clangd, pyright, lua-language-server, neocmakelsp, html, css.
 - **CMake helpers**: cmake-format, cmake-lint (via `cmakelang`).
-- **CLI**: ripgrep, fd, bat, fzf, zoxide, eza, zellij, ast-grep, stylua, tree-sitter, lazygit, yazi, myrepos (`mr`), gita.
+- **CLI**: ripgrep, fd, bat, fzf, zoxide, eza, zellij, ast-grep, stylua, tree-sitter, lazygit, yazi, myrepos (`mr`), gita, opencode.
 - **Terminal multiplexer**: Oh My Tmux config (Nord theme, mouse on, TPM with `tmux-sensible` and `tmux-pomodoro-plus`).
 - **Languages**: Rust (rustup), Node 22, Python 3 (system).
 
