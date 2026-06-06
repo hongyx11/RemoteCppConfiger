@@ -24,6 +24,8 @@ brew "llvm"
 # LSPs / linters / formatters
 brew "lua-language-server"
 brew "pyright"
+brew "bash-language-server"
+brew "yaml-language-server"
 brew "stylua"
 brew "ast-grep"
 brew "tree-sitter"

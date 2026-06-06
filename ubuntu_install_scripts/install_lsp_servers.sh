@@ -1,6 +1,7 @@
 #!/bin/bash
 # Install LSP servers into $PREFIX (default $HOME/local).
-#   pyright, html/css       → npm into $PREFIX/lib, wrapped in $PREFIX/bin
+#   pyright, html/css, yaml,
+#   bash                    → npm into $PREFIX/lib, wrapped in $PREFIX/bin
 #   lua-language-server     → prebuilt tarball
 #   neocmakelsp             → cargo install into $PREFIX
 
@@ -66,6 +67,31 @@ WRAP
   done
 }
 
+# ── yaml/bash LSPs ────────────────────────────────────
+install_node_lsp_servers() {
+  if [ -x "$BIN/bash-language-server" ] && [ -x "$BIN/yaml-language-server" ]; then
+    echo "  yaml/bash LSPs already installed, skipping."; return
+  fi
+  if ! command -v npm >/dev/null; then
+    echo "  npm missing — skipping yaml/bash LSPs."
+    return 1
+  fi
+  echo "==> yaml/bash LSPs"
+  local dest="$LIB/node-lsp-servers"
+  mkdir -p "$dest"
+  npm install --prefix "$dest" bash-language-server yaml-language-server >/dev/null 2>&1
+
+  for cmd in bash-language-server yaml-language-server; do
+    if [ -e "$dest/node_modules/.bin/$cmd" ]; then
+      cat > "$BIN/$cmd" <<WRAP
+#!/bin/bash
+exec "$dest/node_modules/.bin/$cmd" "\$@"
+WRAP
+      chmod +x "$BIN/$cmd"
+    fi
+  done
+}
+
 # ── lua-language-server (prebuilt) ────────────────────
 install_lua_ls() {
   if [ -x "$BIN/lua-language-server" ] && [ -x "$LIB/lua-language-server/bin/lua-language-server" ]; then
@@ -111,6 +137,7 @@ install_neocmakelsp() {
 
 install_pyright             || true
 install_vscode_langservers  || true
+install_node_lsp_servers    || true
 install_lua_ls
 install_neocmakelsp         || true
 

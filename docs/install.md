@@ -138,6 +138,7 @@ INSTALL_NVHPC=1 ./install_all.sh
 | `cargo`, `rustc`, `rustup` | rustup | `RUSTUP_HOME` / `CARGO_HOME` under `$PREFIX/lib`, wrapped in `$PREFIX/bin` |
 | `node`, `npm` | nodejs.org tarball | v22 LTS |
 | `pyright`, `pyright-langserver` | npm | Python LSP |
+| `bash-language-server`, `yaml-language-server` | npm | Shell/YAML LSPs |
 | `lua-language-server` | github prebuilt | Lua LSP |
 | `tree-sitter` | github prebuilt | latest on Ubuntu 24.04; pinned to v0.22.6 on Ubuntu 22.04 (auto-detected) |
 | `rg`, `fd`, `bat`, `eza`, `zellij`, `stylua`, `ast-grep`/`sg` | github prebuilts | rust-based CLIs |

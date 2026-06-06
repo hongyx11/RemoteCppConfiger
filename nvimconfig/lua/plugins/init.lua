@@ -107,7 +107,7 @@ return {
 
       -- Neovim 0.10+ ships c/lua/vim/vimdoc/query/markdown/markdown_inline parsers
       -- and matching queries; don't override them or queries fall out of sync.
-      local parsers = { "html", "css", "cpp", "python" }
+      local parsers = { "bash", "cmake", "css", "cpp", "html", "python", "yaml" }
       -- A language is "installed" only if BOTH parser .so and query dir exist.
       -- Plugin's bundled parser/ dir can be populated by :TSUpdate while queries
       -- are missing from the user install dir — that combination leaves buffers

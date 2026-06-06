@@ -38,7 +38,13 @@ M.ui = {
 }
 
 M.mason = {
-  pkgs = { "neocmakelsp" },
+  pkgs = {
+    "bash-language-server",
+    "cmakelang",
+    "neocmakelsp",
+    "pyright",
+    "yaml-language-server",
+  },
 }
 
 return M
