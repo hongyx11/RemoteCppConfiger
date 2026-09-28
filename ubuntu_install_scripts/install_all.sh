@@ -74,33 +74,10 @@ run "Fonts (Maple Mono NF)" install_fonts.sh
 run "Tmux (Oh My Tmux)" install_tmux.sh
 
 echo
-echo "---- Zellij config ----"
-ZELLIJ_CONFIG_SRC="$REPO_ROOT/shared/zellij/config.kdl"
-ZELLIJ_CONFIG_DST="$HOME/.config/zellij/config.kdl"
-mkdir -p "$(dirname "$ZELLIJ_CONFIG_DST")"
-if [ -e "$ZELLIJ_CONFIG_DST" ] || [ -L "$ZELLIJ_CONFIG_DST" ]; then
-  bak="$ZELLIJ_CONFIG_DST.bak.$(date +%Y%m%d-%H%M%S)"
-  echo "  $ZELLIJ_CONFIG_DST exists; moving to $bak"
-  mv "$ZELLIJ_CONFIG_DST" "$bak"
-fi
-echo "==> Copying $ZELLIJ_CONFIG_SRC → $ZELLIJ_CONFIG_DST"
-cp "$ZELLIJ_CONFIG_SRC" "$ZELLIJ_CONFIG_DST"
-
-echo
-echo "---- Neovim config ----"
-NVIM_CONFIG_SRC="$REPO_ROOT/nvimconfig"
-NVIM_CONFIG_DST="$HOME/.config/nvim"
-mkdir -p "$(dirname "$NVIM_CONFIG_DST")"
-if [ -L "$NVIM_CONFIG_DST" ]; then
-  echo "  $NVIM_CONFIG_DST is a symlink; removing it before copy."
-  rm "$NVIM_CONFIG_DST"
-elif [ -e "$NVIM_CONFIG_DST" ]; then
-  bak="$NVIM_CONFIG_DST.bak.$(date +%Y%m%d-%H%M%S)"
-  echo "  $NVIM_CONFIG_DST exists; moving to $bak"
-  mv "$NVIM_CONFIG_DST" "$bak"
-fi
-echo "==> Copying $NVIM_CONFIG_SRC → $NVIM_CONFIG_DST"
-cp -R "$NVIM_CONFIG_SRC" "$NVIM_CONFIG_DST"
+echo "Neovim and Zellij configs are managed separately:"
+echo "  https://github.com/hongyx11/nvimconfig"
+echo "  https://github.com/hongyx11/zellijconfig"
+echo "Use configmgr to clone them into your config directory."
 
 run "Shell rc"         setup_shell_rc.sh
 

@@ -1,1 +1,0 @@
-return "ayu_light"

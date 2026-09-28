@@ -1,25 +1,12 @@
 .DS_Store
+*.log
+.claude/
+__pycache__/
+.venv/
 
-# Build artifacts and binaries
-install_dependencies/bin/
-install_dependencies/rust_install/
-install_dependencies/lsp/
-install_dependencies/.venv/
-install_dependencies/.crates.toml
-install_dependencies/.crates2.json
-install_dependencies/nvim-build/
-install_dependencies/nvim-install/
-
-# Compiled files
+# Compiled artifacts
 *.o
 *.so
 *.dylib
 *.dll
 *.exe
-
-# Neovim generated
-plugin/packer_compiled.lua
-.netrwhist
-
-# Theme persistence (kept out of repo so theme switches don't dirty git)
-lua/theme_state.lua

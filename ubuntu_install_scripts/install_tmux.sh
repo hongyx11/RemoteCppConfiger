@@ -1,6 +1,6 @@
 #!/bin/bash
 # Install Oh My Tmux (gpakosz/.tmux) directly into ~/.tmux, copy .tmux.conf
-# into $HOME, seed ~/.tmux.conf.local from shared/tmux/, install TPM, and
+# into $HOME, link ~/.tmux.conf.local from the independent tmuxconfig checkout, install TPM, and
 # headlessly install the plugins listed in the .local file.
 #
 # Assumes `tmux` itself is already on PATH (apt/spack on the host). This script
@@ -8,12 +8,16 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TMUX_DIR="$HOME/.tmux"
-LOCAL_SRC="$REPO_ROOT/shared/tmux/tmux.conf.local"
+LOCAL_SRC="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf.local"
 LOCAL_DST="$HOME/.tmux.conf.local"
 TPM_DIR="$TMUX_DIR/plugins/tpm"
+
+if [ ! -f "$LOCAL_SRC" ]; then
+  echo "Missing tmuxconfig checkout: $LOCAL_SRC" >&2
+  echo "Run ./configmgr clone tmuxconfig from the config manager first." >&2
+  exit 1
+fi
 
 if ! command -v tmux >/dev/null 2>&1; then
   echo "  warning: 'tmux' not found on PATH. Install it via apt or spack, then re-run."
@@ -44,14 +48,12 @@ elif [ -e "$HOME/.tmux.conf" ]; then
 fi
 cp "$TMUX_DIR/.tmux.conf" "$HOME/.tmux.conf"
 
-if [ -L "$LOCAL_DST" ]; then
-  rm "$LOCAL_DST"
-fi
-if [ -e "$LOCAL_DST" ]; then
+if [ -e "$LOCAL_DST" ] || [ -L "$LOCAL_DST" ]; then
   echo "  $LOCAL_DST already exists, leaving it untouched."
+  echo "  Canonical customizations: $LOCAL_SRC"
 else
-  echo "==> Writing bundled customizations to $LOCAL_DST"
-  cp "$LOCAL_SRC" "$LOCAL_DST"
+  echo "==> Linking customizations from $LOCAL_SRC to $LOCAL_DST"
+  ln -s "$LOCAL_SRC" "$LOCAL_DST"
 fi
 
 if [ -d "$TPM_DIR/.git" ]; then

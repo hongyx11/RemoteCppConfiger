@@ -10,7 +10,6 @@
 #                    no libtinfo5 needed
 #
 # Override with: LLVM_VERSION=X.Y.Z LLVM_ASSET=... ./install_llvm.sh
-# See docs/design.md for trade-offs.
 
 set -euo pipefail
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 # Source this before opening nvim to load the RemoteCppConfiger environment.
 # Usage:
-#   source ~/.config/nvim/install_dependencies/activate.sh
-#   source ~/.config/nvim/install_dependencies/activate.sh && nvim
+#   source ~/.config/remotecppconfiger/ubuntu_install_scripts/activate.sh
+#   source ~/.config/remotecppconfiger/ubuntu_install_scripts/activate.sh && nvim
 
 _PREFIX="${PREFIX:-$HOME/local}"
 export SPACK_ROOT="${SPACK_ROOT:-$_PREFIX/spack}"
